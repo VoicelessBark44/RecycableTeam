@@ -16,7 +16,6 @@ web-build/
 *.key
 *.mobileprovision
 
-#Leaith Rawashdeh ignores
 #*.png
 **/babel
 
