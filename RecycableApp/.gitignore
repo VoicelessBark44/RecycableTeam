@@ -16,9 +16,6 @@ web-build/
 *.key
 *.mobileprovision
 
-#*.png
-**/babel
-
 # Metro
 .metro-health-check*
 
@@ -36,6 +33,3 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-package-lock.json
-*.json
-package.json
