@@ -1,4 +1,3 @@
-
 import { Pressable, Text, View } from "react-native";
 import { TouchableOpacity, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useNavigation } from "@react-navigation/native";
@@ -17,11 +16,23 @@ function Home(){
         <Text>Profile</Text>
     </TouchableOpacity>
 
+    var LoginButton = 
+    <TouchableOpacity onPress={() => navigation.navigate("Login", { userData })}>
+        <Text>Login</Text>
+    </TouchableOpacity>
+
+    var TrackingButton = 
+    <TouchableOpacity onPress={() => navigation.navigate("Tracking", { userData })}>
+        <Text>Tracking</Text>
+    </TouchableOpacity>
+
     return (
         <View>
             <Text>This is the Home Screen.</Text>
             <GestureHandlerRootView>
                 {ProfileButton}
+                {LoginButton}
+                {TrackingButton}
             </GestureHandlerRootView>
         </View>
     )
