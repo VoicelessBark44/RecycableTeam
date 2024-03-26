@@ -65,11 +65,18 @@ const Login = ({navigation, route}) => {
                     onChangeText={setPassword}
                 />
             </View>
-            <View>
+            <View style={styles.button}>
                 <TouchableOpacity
                     onPress={onLogin}
                 >
                 <Text>Login</Text>
+                </TouchableOpacity>
+            </View>
+            <View style = {styles.button}>
+                <TouchableOpacity
+                    onPress={navigation.navigate("Register")}
+                >
+                    
                 </TouchableOpacity>
             </View>
         </View>
@@ -100,6 +107,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         marginBottom: 16,
         fontSize: 16,
+    },
+    button: {
+        backgroundColor: "lightblue",
+        padding: 10,
+        margin: 10,
+        borderRadius: 8,
+        textAlign: 'center',
     },
 });
 
