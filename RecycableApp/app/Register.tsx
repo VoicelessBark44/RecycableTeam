@@ -1,14 +1,60 @@
-import { Link, useLocalSearchParams } from "expo-router";
-import { Text, View, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import React, { useState } from "react";
-import firebase from "./Firebase";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
 
-const Register = ({navigation, route}) => {
+const Register = ({ navigation, route }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmEmail, setConfirmEmail] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
+    const handleRegister = () => {
+        // Add your registration logic here
+        if (email !== confirmEmail) {
+            alert('Emails do not Match! \n Please try again');
+            return;
+        }
+        if (password !== confirmPassword) {
+            alert('Passwords do not match! \n Please Try again');
+            return;
+        }
+    };
 
-
-}
+    return (
+        <View style={styles.container}>
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                onChangeText={setEmail}
+                value={email}
+                keyboardType="email-address"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Confirm Email"
+                onChangeText={setConfirmEmail}
+                value={confirmEmail}
+                keyboardType="email-address"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                onChangeText={setPassword}
+                value={password}
+                secureTextEntry
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Confirm Password"
+                onChangeText={setConfirmPassword}
+                value={confirmPassword}
+                secureTextEntry
+            />
+            <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -16,11 +62,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#bfefff", // Light blue background color
-    },
-    heading: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 20,
     },
     input: {
         backgroundColor: "#fff",
@@ -31,13 +72,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         marginBottom: 16,
         fontSize: 16,
+        width: "80%",
     },
     button: {
         backgroundColor: "lightblue",
         padding: 10,
         margin: 10,
         borderRadius: 8,
-        textAlign: 'center',
+        width: "80%",
+        alignItems: "center",
+    },
+    buttonText: {
+        fontSize: 16,
+        fontWeight: "bold",
     },
 });
 

@@ -74,9 +74,9 @@ const Login = ({navigation, route}) => {
             </View>
             <View style = {styles.button}>
                 <TouchableOpacity
-                    onPress={navigation.navigate("Register")}
+                    onPress={() => navigation.navigate('Register')}
                 >
-                    
+                <Text>Register an Account</Text>
                 </TouchableOpacity>
             </View>
         </View>
