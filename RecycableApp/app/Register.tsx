@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
+import firebase from './Firebase.js'
+import { getAuth, createUserWithEmailAndPassword  } from "firebase/auth";
 
 const Register = ({ navigation, route }) => {
+
+    const auth = getAuth(firebase);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
@@ -16,7 +21,24 @@ const Register = ({ navigation, route }) => {
         if (password !== confirmPassword) {
             alert('Passwords do not match! \n Please Try again');
             return;
+        } else {
+
+            createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                navigation.navigate("Login");
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode);
+                console.log(errorMessage);
+                return 1;
+            });
+        return 0;
         }
+        alert("Something went wrong. Please enter account info again");
+        return 1;
     };
 
     return (
