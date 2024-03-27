@@ -12,6 +12,7 @@ import Profile from './Profile';
 import UserPage from "./users/[id]";
 import Tracking from './Tracking';
 import Login from './Login';
+import Register from './Register';
 import PatientInfo from './PatientInfo';
 import Family from './Family';
 import HealthHistory from './HealthHistory';
@@ -29,6 +30,7 @@ function index(){
                 <Stack.Screen name = 'Profile' component={Profile} options={{ title: "Profile Page" }} />
                 <Stack.Screen name = 'Tracking' component={Tracking} options={{ title: "Tracking Page"}} />
                 <Stack.Screen name = 'Login' component={Login} options={{ title: "Login Page"}} />
+                <Stack.Screen name = 'Register' component={Register} options={{ title: "Register Page"}} />
                 <Stack.Screen name = 'PatientInfo' component={PatientInfo} options={{ title: "Patient Info Page" }} />
                 <Stack.Screen name = 'Family' component={Family} options={{ title: "Family Page" }} />
                 <Stack.Screen name = 'HealthHistory' component={HealthHistory} options={{ title: "Health History Page" }} />
