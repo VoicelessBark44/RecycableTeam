@@ -46,7 +46,7 @@ const Login = ({navigation, route}) => {
 
         const user = auth.currentUser;
         if (user != null) {
-            navigation.navigate("Home");
+            navigation.navigate("Home", {userData});
         } else {
             //IDK yet
         }
@@ -61,6 +61,12 @@ const Login = ({navigation, route}) => {
 
             if (docSnap.exists()) {
                 console.log('Document data: ', docSnap.data());
+                const userDataFromSnapshot = docSnap.data();
+                userData.adminPriv = userDataFromSnapshot.adminPriv;
+                userData.firstName = userDataFromSnapshot.firstName;
+                userData.middleName = userDataFromSnapshot.middleName;
+                userData.lastName = userDataFromSnapshot.lastName;
+                console.log('userData: ', userData);
             } else {
                 console.log('Np such document!');
             }
