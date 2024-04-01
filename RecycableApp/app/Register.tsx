@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
 import firebase from './Firebase.js'
+import { collection, addDoc, setDoc, doc} from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword  } from "firebase/auth";
 
 const Register = ({ navigation, route }) => {
@@ -11,6 +12,9 @@ const Register = ({ navigation, route }) => {
     const [password, setPassword] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [middleName, setMiddleName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const handleRegister = () => {
         // Add your registration logic here
@@ -26,6 +30,7 @@ const Register = ({ navigation, route }) => {
             createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
+                const uid = userCredential.user.uid;
                 navigation.navigate("Login");
             })
             .catch((error) => {
@@ -70,6 +75,25 @@ const Register = ({ navigation, route }) => {
                 onChangeText={setConfirmPassword}
                 value={confirmPassword}
                 secureTextEntry
+            />
+
+            <TextInput
+                style={styles.input}
+                placeholder="First Name"
+                onChangeText={setFirstName}
+                value ={firstName}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Middle Name or Initial"
+                onChangeText={setMiddleName}
+                value ={middleName}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Last Name"
+                onChangeText={setLastName}
+                value ={lastName}
             />
             <TouchableOpacity style={styles.button} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Register</Text>
