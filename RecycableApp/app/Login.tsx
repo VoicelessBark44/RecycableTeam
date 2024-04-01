@@ -1,14 +1,16 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { Text, View, TouchableOpacity, StyleSheet, TextInput } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, TextInput, Alert } from "react-native";
 import React, { useState } from "react";
-import firebase from "./Firebase";
+import firebase, { db } from "./Firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, getDoc} from "firebase/firestore";
 
 const Login = ({navigation, route}) => {
     const { id } = useLocalSearchParams();
 
     const auth = getAuth(firebase);
 
+    //const database = get    
     //Manually sets the language code to english for testing
     //Normally when this is removed it should be whatever the systems language code is
     auth.languageCode = 'en';
@@ -19,7 +21,10 @@ const Login = ({navigation, route}) => {
 
     const userData = {
         userID: undefined,
-        adminPriv: undefined
+        adminPriv: undefined,
+        firstName: undefined,
+        middleName: undefined,
+        lastName: undefined
     };
 
     const onLogin = async () => {
@@ -30,6 +35,9 @@ const Login = ({navigation, route}) => {
             setErrorMessage('Login Successful!');
 
             const user = userCredential.user;
+            userData.userID = userCredential.user.uid;
+            //Alert.alert('Test', userData.userID);
+            getUserData();
         })
         .catch((error) => {
             setErrorMessage('Your Password or Email \n Do not Match. Please Try Again.');
@@ -43,6 +51,37 @@ const Login = ({navigation, route}) => {
             //IDK yet
         }
 
+    }
+
+    const getUserData = async () => {
+        try {
+
+            const docRef = doc(db, 'Users', userData.userID);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                console.log('Document data: ', docSnap.data());
+            } else {
+                console.log('Np such document!');
+            }
+
+        } catch (error) {
+            console.log('Something went wrong', error.message);
+        }
+    }
+
+    const testerFunction = async () => {
+        try {
+            await setDoc(doc(db, "Users", "Tester"), {
+            firstName: "I",
+            middleName: "am a",
+            lastName: "Test",
+            adminPriv: false
+        });
+        Alert.alert('Sucess', 'Document seccessully written!');
+        } catch (error) {
+            Alert.alert('Error', 'Failed to write to document!');
+        }
     }
 
     return (
@@ -77,6 +116,13 @@ const Login = ({navigation, route}) => {
                     onPress={() => navigation.navigate('Register')}
                 >
                 <Text>Register an Account</Text>
+                </TouchableOpacity>
+            </View>
+            <View style = {styles.button}>
+                <TouchableOpacity
+                    onPress={testerFunction}
+                >
+                <Text>Press Me</Text>
                 </TouchableOpacity>
             </View>
         </View>
