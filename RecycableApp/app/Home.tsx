@@ -27,6 +27,11 @@ function Home(){
         <Text>Tracking</Text>
     </TouchableOpacity>
 
+    var PatientSignUpButton = 
+    <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate("PatientSignUp", {userData})}>
+        <Text>Patient Sign Up</Text>
+    </TouchableOpacity>
+
     return (
         <View style={styles.container}>
             <Text>This is the Home Screen.</Text>
@@ -34,6 +39,7 @@ function Home(){
                 {ProfileButton}
                 {LoginButton}
                 {TrackingButton}
+                {PatientSignUpButton}
             </GestureHandlerRootView>
         </View>
     )

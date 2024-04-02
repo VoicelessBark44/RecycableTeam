@@ -18,6 +18,7 @@ import Family from './Family';
 import HealthHistory from './HealthHistory';
 import Appointments from './Appointments';
 import BookAppointment from './BookAppointment';
+import PatientSignUp from './PatientSignUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,7 @@ function index(){
                 <Stack.Screen name = 'HealthHistory' component={HealthHistory} options={{ title: "Health History Page" }} />
                 <Stack.Screen name = 'Appointments' component={Appointments} options={{ title: "Appointments Page" }} />
                 <Stack.Screen name = 'BookAppointment' component={BookAppointment} options={{ title: "Book Appointment Page" }} />
+                <Stack.Screen name = 'PatientSignUp' component={PatientSignUp} options={{ title: "Patient Sign Up Page"}} />
             </Stack.Navigator>
         </NavigationContainer>
     )
