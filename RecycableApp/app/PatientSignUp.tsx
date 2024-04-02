@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
-import firebase from './Firebase.js'
+import firebase, { db } from "./Firebase";
 import { collection, addDoc, setDoc, doc} from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword  } from "firebase/auth";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -28,12 +28,15 @@ const PatientSignUp = ({ navigation, route }) => {
     }
 
     function generateUsername(firstName, lastName, birthYear) {
-        return `${firstName.toLowerCase()}${lastName.toLowerCase()}${birthYear}`;
+        return `${firstName}${lastName}${birthYear}`;
     }
     
     const handleRegister = async () => {
 
         const birthYear = new Date(birthDate).getFullYear();
+        const birthMonth = ('0' + (birthDate.getMonth() + 1)).slice(-2);
+        const birthDay = ('0' + birthDate.getDate()).slice(-2);
+        const fullBirthDate = `${birthYear}-${birthMonth}-${birthDay}`;
 
         const newUsername = generateUsername(firstName, lastName, birthYear);
         const newMedicalID = generateRandomString();
@@ -41,13 +44,27 @@ const PatientSignUp = ({ navigation, route }) => {
         setUserName(newUsername);
         setMedicalID(newMedicalID);
 
-        Alert.alert(
-            'Registration Successful',
-            `Username: ${newUsername}\nMedical ID: ${newMedicalID}`,
-            [{ text: 'OK' }],
-            { cancelable: false }
-          );
-
+        const patientRef = doc(db, 'Patients', newUsername);
+        setDoc(patientRef, {
+            fullName: {
+                firstName: firstName,
+                middleName: middleName,
+                lastName: lastName
+            },
+            birthDate: fullBirthDate,
+            medicalID: newMedicalID
+        })
+        .then(() => {
+            Alert.alert(
+                'Registration Successful',
+                `Username: ${newUsername}\nMedical ID: ${newMedicalID}\nBirthday: ${fullBirthDate}`,
+                [{ text: 'OK' }],
+                { cancelable: false }
+            );
+        })
+        .catch((error) => {
+            console.error('Error adding document: ', error);
+        });
     }
     
 
