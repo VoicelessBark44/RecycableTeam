@@ -17,6 +17,7 @@ import LabTest from './LabTest';
 import Prescription from './Prescription';
 import Analytics from './Analytics';
 import EMR from './EMR';
+import Search from './Search';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ function index(){
                 <Stack.Screen name = 'Prescription' component={Prescription} options={{ title: "Prescription Page" }} />
                 <Stack.Screen name = 'Analytics' component={Analytics} options={{ title: "Analytics Page" }} />
                 <Stack.Screen name = 'EMR' component={EMR} options={{ title: "EMR Page" }} />
+                <Stack.Screen name = 'Search' component={Search} options={{ title: "Search Page" }} />
             </Stack.Navigator>
         </NavigationContainer>
     )

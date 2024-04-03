@@ -26,6 +26,11 @@ function Home(){
         <Text>Tracking</Text>
     </TouchableOpacity>
 
+    var SearchButton =
+    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Search", { userData })}>
+        <Text>Search</Text>
+    </TouchableOpacity>
+
     return (
         <View style={styles.container}>
             <Text>This is the Home Screen.</Text>
@@ -33,6 +38,7 @@ function Home(){
                 {ProfileButton}
                 {LoginButton}
                 {TrackingButton}
+                {SearchButton}
             </GestureHandlerRootView>
         </View>
     )
