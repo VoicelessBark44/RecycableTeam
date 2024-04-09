@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity, StyleSheet, TextInput, Alert } from "reac
 import React, { useState } from "react";
 import firebase, { db } from "./Firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, getDoc} from "firebase/firestore";
+import { doc, setDoc, getDoc, collection, addDoc, getDocs} from "firebase/firestore";
 
 const Login = ({navigation, route}) => {
     const { id } = useLocalSearchParams();
@@ -76,19 +76,67 @@ const Login = ({navigation, route}) => {
         }
     }
 
-    const testerFunction = async () => {
+    const getTesterFunction = async () => {
         try {
-            await setDoc(doc(db, "Users", "Tester"), {
-            firstName: "I",
-            middleName: "am a",
-            lastName: "Test",
-            adminPriv: false
-        });
-        Alert.alert('Sucess', 'Document seccessully written!');
+            const familyName = "GonzalezFamily";
+            
+            // Get a reference to the "Patients" collection
+            const patientsRef = collection(db, "Patients");
+            
+            // Get a reference to the "GonzalezFamily" subcollection under the patient document
+            const familyRef = collection(patientsRef, familyName, "FamilyMembers");
+    
+            // Retrieve all documents from the "FamilyMembers" subcollection
+            const querySnapshot = await getDocs(familyRef);
+    
+            // Iterate over each document and log its data
+            querySnapshot.forEach((doc) => {
+                console.log("Family Member:", doc.id, doc.data());
+            });
+    
         } catch (error) {
-            Alert.alert('Error', 'Failed to write to document!');
+            console.error("Error fetching family members: ", error);
         }
     }
+
+    const testerFunction = async () => {
+        // try {
+        //     await setDoc(doc(db, "Users", "Tester"), {
+        //     firstName: "I",
+        //     middleName: "am a",
+        //     lastName: "Test",
+        //     adminPriv: false
+        // });
+        // Alert.alert('Sucess', 'Document seccessully written!');
+        // } catch (error) {
+        //     Alert.alert('Error', 'Failed to write to document!');
+        // }
+        try {
+            const familyName = "GonzalezFamily";
+            
+            // Get a reference to the document under which you want to create the subcollection
+            const patientsRef = collection(db, "Patients");
+            
+            // Add the family subcollection under the patient document with the family name as the document ID
+            const familyRef = collection(doc(patientsRef, familyName), "FamilyMembers");
+            
+            // Add family members
+            const familyMembers = [
+                { name: "Adrian", age: 35, otherDetails: "..." },
+                { name: "Gabriella", age: 30, otherDetails: "..." },
+                { name: "Aaron", age: 10, otherDetails: "..." }
+            ];
+            
+            // Add each family member to the family subcollection
+            for (const member of familyMembers) {
+                await addDoc(familyRef, member);
+            }
+    
+            console.log("Family added with members.");
+        } catch (error) {
+            console.error("Error adding family: ", error);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -126,7 +174,7 @@ const Login = ({navigation, route}) => {
             </View>
             <View style = {styles.button}>
                 <TouchableOpacity
-                    onPress={testerFunction}
+                    onPress={getTesterFunction}
                 >
                 <Text>Press Me</Text>
                 </TouchableOpacity>

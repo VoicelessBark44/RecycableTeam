@@ -32,6 +32,11 @@ function Home(){
         <Text>Patient Sign Up</Text>
     </TouchableOpacity>
 
+    var FamilyRegisterButton = 
+    <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate("TestFamilyRegister", {userData})}>
+        <Text>Family Register</Text>
+    </TouchableOpacity>
+
     return (
         <View style={styles.container}>
             <Text>This is the Home Screen.</Text>
@@ -40,6 +45,7 @@ function Home(){
                 {LoginButton}
                 {TrackingButton}
                 {PatientSignUpButton}
+                {FamilyRegisterButton}
             </GestureHandlerRootView>
         </View>
     )
