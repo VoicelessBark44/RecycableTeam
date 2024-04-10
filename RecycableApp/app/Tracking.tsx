@@ -2,18 +2,21 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 
-const Tracking = (navigation) => {
+const Tracking = ({navigation, route}) => {
     const { id } = useLocalSearchParams();
+    const { userData } = route.params;
     return (
         <View style = {styles.container}>
             <View style={styles.row}>
                 <TouchableOpacity
                     style={styles.button}
+                    onPress={() => navigation.navigate("MedicalDiagnosis", { userData })}
                 >
                     <Text style={styles.buttonText}>Medical Diagnosis</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
+                    onPress={() => navigation.navigate("LabTest", { userData })}
                 >
                     <Text style={styles.buttonText}>Lab Tests</Text>
                 </TouchableOpacity>
@@ -21,13 +24,23 @@ const Tracking = (navigation) => {
             <View style={styles.row}>
                 <TouchableOpacity
                     style={styles.button}
+                    onPress={() => navigation.navigate("Prescription", { userData })}
                 >
-                    <Text style={styles.buttonText}>Pescription</Text>
+                    <Text style={styles.buttonText}>Prescription</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
+                    onPress={() => navigation.navigate("Analytics", { userData })}
                 >
                     <Text style={styles.buttonText}>Analytics</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.row}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate("EMR", { userData })}
+                >
+                    <Text style={styles.buttonText}>EMR</Text>
                 </TouchableOpacity>
             </View>
         </View>
