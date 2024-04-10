@@ -26,7 +26,17 @@ function Home(){
     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Tracking", { userData })}>
         <Text>Tracking</Text>
     </TouchableOpacity>
+        
+    var PatientSignUpButton = 
+    <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate("PatientSignUp", {userData})}>
+        <Text>Patient Sign Up</Text>
+    </TouchableOpacity>
 
+    var FamilyRegisterButton = 
+    <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate("TestFamilyRegister", {userData})}>
+        <Text>Family Register</Text>
+    </TouchableOpacity>
+        
     var SearchButton =
     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Search", { userData })}>
         <Text>Search</Text>
@@ -39,6 +49,8 @@ function Home(){
                 {ProfileButton}
                 {LoginButton}
                 {TrackingButton}
+                {PatientSignUpButton}
+                {FamilyRegisterButton}
                 {SearchButton}
             </GestureHandlerRootView>
         </View>

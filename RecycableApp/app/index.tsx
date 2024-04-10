@@ -24,6 +24,8 @@ import Prescription from './Prescription';
 import Analytics from './Analytics';
 import EMR from './EMR';
 import Search from './Search';
+import PatientSignUp from './PatientSignUp';
+import TestFamilyRegister from './TestFamilyRegister';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +44,8 @@ function index(){
                 <Stack.Screen name = 'HealthHistory' component={HealthHistory} options={{ title: "Health History Page" }} />
                 <Stack.Screen name = 'Appointments' component={Appointments} options={{ title: "Appointments Page" }} />
                 <Stack.Screen name = 'BookAppointment' component={BookAppointment} options={{ title: "Book Appointment Page" }} />
+                <Stack.Screen name = 'PatientSignUp' component={PatientSignUp} options={{ title: "Patient Sign Up Page"}} />
+                <Stack.Screen name = 'TestFamilyRegister' component={TestFamilyRegister} options={{ title: "Test Family Register"}} />
                 <Stack.Screen name = 'MedicalDiagnosis' component={MedicalDiagnosis} options={{ title: "Medical Diagnosis Page" }} />
                 <Stack.Screen name = 'LabTest' component={LabTest} options={{ title: "Lab Test Page" }} />
                 <Stack.Screen name = 'Prescription' component={Prescription} options={{ title: "Prescription Page" }} />

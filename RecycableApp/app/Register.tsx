@@ -1,16 +1,22 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native";
-import firebase from './Firebase.js'
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from "react-native";
+import firebase, { db } from "./Firebase";
+import { collection, addDoc, setDoc, doc} from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword  } from "firebase/auth";
 
 const Register = ({ navigation, route }) => {
 
     const auth = getAuth(firebase);
 
+    let uid = '';
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmEmail, setConfirmEmail] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [middleName, setMiddleName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const handleRegister = () => {
         // Add your registration logic here
@@ -26,20 +32,43 @@ const Register = ({ navigation, route }) => {
             createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
+                uid = userCredential.user.uid;
+                createDBUser();
                 navigation.navigate("Login");
+
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorCode);
                 console.log(errorMessage);
-                return 1;
+                if (errorCode === "auth/email-already-in-use") {
+                    alert("Email is already in use. Please use a different email address.");
+                } else {
+                    alert("Something went wrong. Please try again. ");
+                }
             });
-        return 0;
         }
-        alert("Something went wrong. Please enter account info again");
-        return 1;
     };
+
+    const createDBUser = async () => {
+
+        try {
+
+            await setDoc(doc(db, 'Users', uid), {
+                firstName: firstName,
+                middleName: middleName,
+                lastName: lastName,
+                adminPriv: true
+            });
+            Alert.alert('DB made User successfully!');
+        } catch (error) {
+
+            Alert.alert('DB not made correctly');
+
+        }
+
+    }
 
     return (
         <View style={styles.container}>
@@ -70,6 +99,25 @@ const Register = ({ navigation, route }) => {
                 onChangeText={setConfirmPassword}
                 value={confirmPassword}
                 secureTextEntry
+            />
+
+            <TextInput
+                style={styles.input}
+                placeholder="First Name"
+                onChangeText={setFirstName}
+                value ={firstName}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Middle Name or Initial"
+                onChangeText={setMiddleName}
+                value ={middleName}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Last Name"
+                onChangeText={setLastName}
+                value ={lastName}
             />
             <TouchableOpacity style={styles.button} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Register</Text>
