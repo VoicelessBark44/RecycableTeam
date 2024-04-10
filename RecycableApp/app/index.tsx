@@ -18,6 +18,12 @@ import Family from './Family';
 import HealthHistory from './HealthHistory';
 import Appointments from './Appointments';
 import BookAppointment from './BookAppointment';
+import MedicalDiagnosis from './MedicalDiagnosis';
+import LabTest from './LabTest';
+import Prescription from './Prescription';
+import Analytics from './Analytics';
+import EMR from './EMR';
+import Search from './Search';
 import PatientSignUp from './PatientSignUp';
 import TestFamilyRegister from './TestFamilyRegister';
 
@@ -40,6 +46,12 @@ function index(){
                 <Stack.Screen name = 'BookAppointment' component={BookAppointment} options={{ title: "Book Appointment Page" }} />
                 <Stack.Screen name = 'PatientSignUp' component={PatientSignUp} options={{ title: "Patient Sign Up Page"}} />
                 <Stack.Screen name = 'TestFamilyRegister' component={TestFamilyRegister} options={{ title: "Test Family Register"}} />
+                <Stack.Screen name = 'MedicalDiagnosis' component={MedicalDiagnosis} options={{ title: "Medical Diagnosis Page" }} />
+                <Stack.Screen name = 'LabTest' component={LabTest} options={{ title: "Lab Test Page" }} />
+                <Stack.Screen name = 'Prescription' component={Prescription} options={{ title: "Prescription Page" }} />
+                <Stack.Screen name = 'Analytics' component={Analytics} options={{ title: "Analytics Page" }} />
+                <Stack.Screen name = 'EMR' component={EMR} options={{ title: "EMR Page" }} />
+                <Stack.Screen name = 'Search' component={Search} options={{ title: "Search Page" }} />
             </Stack.Navigator>
         </NavigationContainer>
     )
