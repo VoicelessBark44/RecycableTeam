@@ -1,3 +1,4 @@
+import React from 'react';
 import { Pressable, Text, View, StyleSheet} from "react-native";
 import { TouchableOpacity, GestureHandlerRootView} from 'react-native-gesture-handler';
 import { useNavigation } from "@react-navigation/native";
@@ -9,7 +10,7 @@ function Home(){
     const userData = {
         Data1: '1',
         Data2: true
-    }
+    };
 
     var ProfileButton = 
     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Profile", { userData })}>
