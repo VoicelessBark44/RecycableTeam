@@ -17,13 +17,24 @@ const TestFamilyRegister = () => {
   
     const handleAddFamilyMember = () => {
       const newMemberID = generateID(patientFirstName, patientLastName, patientBirthday.getFullYear());
-      setFamilyMembers([...familyMembers, { firstName: '', lastName: '', birthday: new Date(), docID: newMemberID }]);
+      setFamilyMembers([...familyMembers, { fullName: '', birthday: new Date(), docRef: newMemberID }]);
     };
   
-    const handleSave = () => {
+    const handleSave = async () => {
       // Handle saving data to Firestore
-      console.log('Patient:', patientFirstName, patientLastName, patientBirthday);
-      console.log('Family Members:', familyMembers);
+      const patientID = generateID(patientFirstName, patientLastName, patientBirthday.getFullYear());
+      const patientDocRef = doc(db, "Patients", patientID);
+      const patientData = {
+        fullName: `${patientFirstName} ${patientLastName}`,
+        birthdate: patientBirthday,
+        familyMembers: familyMembers.map(member => ({
+          fullName: member.fullName,
+          birthday: member.birthday,
+          docRef: generateID(member.fullName.split(' ')[0], member.fullName.split(' ')[1], member.birthday.getFullYear())
+        }))
+      };
+      await setDoc(patientDocRef, patientData);
+
       // Reset form fields after saving
       setPatientFirstName('');
       setPatientLastName('');
@@ -31,15 +42,9 @@ const TestFamilyRegister = () => {
       setFamilyMembers([]);
     };
   
-    const handleFamilyMemberFirstNameChange = (index, text) => {
+    const handleFamilyMemberNameChange = (index, text) => {
       const updatedFamilyMembers = [...familyMembers];
-      updatedFamilyMembers[index].firstName = text;
-      setFamilyMembers(updatedFamilyMembers);
-    };
-  
-    const handleFamilyMemberLastNameChange = (index, text) => {
-      const updatedFamilyMembers = [...familyMembers];
-      updatedFamilyMembers[index].lastName = text;
+      updatedFamilyMembers[index].fullName = text;
       setFamilyMembers(updatedFamilyMembers);
     };
   
@@ -84,15 +89,9 @@ const TestFamilyRegister = () => {
             <View key={index} style={styles.familyMemberItem}>
               <TextInput
                 style={styles.input}
-                placeholder="First Name"
-                value={member.firstName}
-                onChangeText={(text) => handleFamilyMemberFirstNameChange(index, text)}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Last Name"
-                value={member.lastName}
-                onChangeText={(text) => handleFamilyMemberLastNameChange(index, text)}
+                placeholder="Full Name"
+                value={member.fullName}
+                onChangeText={(text) => handleFamilyMemberNameChange(index, text)}
               />
               <Button title="Select Birthday" onPress={() => setShowDatePicker(true)} />
               {showDatePicker && (
@@ -112,6 +111,7 @@ const TestFamilyRegister = () => {
       </ScrollView>
     );
   };
+
   
 const styles = StyleSheet.create({
     container: {
