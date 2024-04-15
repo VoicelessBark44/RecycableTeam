@@ -8,7 +8,10 @@ const TestFamilyRegister = () => {
     const [patientFirstName, setPatientFirstName] = useState('');
     const [patientLastName, setPatientLastName] = useState('');
     const [patientBirthday, setPatientBirthday] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [patientGender, setPatientGender] = useState('');
+    const [patientHealthHistory, setPatientHealthHistory] = useState('');
+    const [showPatientDatePicker, setShowPatientDatePicker] = useState(false);
+    const [showFamilyMemberDatePicker, setShowFamilyMemberDatePicker] = useState(false);
     const [familyMembers, setFamilyMembers] = useState([]);
   
     const generateID = (firstName, lastName, birthYear) => {
@@ -27,6 +30,8 @@ const TestFamilyRegister = () => {
       const patientData = {
         fullName: `${patientFirstName} ${patientLastName}`,
         birthdate: patientBirthday,
+        gender: patientGender,
+        healthHistory: patientHealthHistory.split(',').map(item => item.trim()),
         familyMembers: familyMembers.map(member => ({
           fullName: member.fullName,
           birthday: member.birthday,
@@ -39,6 +44,8 @@ const TestFamilyRegister = () => {
       setPatientFirstName('');
       setPatientLastName('');
       setPatientBirthday(new Date());
+      setPatientGender('');
+      setPatientHealthHistory('');
       setFamilyMembers([]);
     };
   
@@ -69,16 +76,30 @@ const TestFamilyRegister = () => {
             value={patientLastName}
             onChangeText={setPatientLastName}
           />
-          <Button title="Select Patient Birthday" onPress={() => setShowDatePicker(true)} />
-          {showDatePicker && (
+          <TextInput
+            style={styles.input}
+            placeholder="Gender"
+            value={patientGender}
+            onChangeText={setPatientGender}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Health History (comma separated)"
+            value={patientHealthHistory}
+            onChangeText={setPatientHealthHistory}
+          />
+          <Button title="Select Patient Birthday" onPress={() => setShowPatientDatePicker(true)} />
+          {showPatientDatePicker && (
             <DateTimePicker
-              testID="dateTimePicker"
+              testID="patientDateTimePicker"
               value={patientBirthday}
               mode="date"
               display="default"
               onChange={(event, selectedDate) => {
-                setShowDatePicker(false);
-                setPatientBirthday(selectedDate || patientBirthday);
+                setShowPatientDatePicker(false);
+                if (selectedDate) {
+                  setPatientBirthday(selectedDate);
+                }
               }}
             />
           )}
@@ -93,10 +114,10 @@ const TestFamilyRegister = () => {
                 value={member.fullName}
                 onChangeText={(text) => handleFamilyMemberNameChange(index, text)}
               />
-              <Button title="Select Birthday" onPress={() => setShowDatePicker(true)} />
-              {showDatePicker && (
+              <Button title="Select Birthday" onPress={() => setShowFamilyMemberDatePicker(true)} />
+              {showFamilyMemberDatePicker && (
                 <DateTimePicker
-                  testID="dateTimePicker"
+                  testID="familyMemberDateTimePicker"
                   value={member.birthday}
                   mode="date"
                   display="default"
@@ -111,6 +132,7 @@ const TestFamilyRegister = () => {
       </ScrollView>
     );
   };
+
 
   
 const styles = StyleSheet.create({
