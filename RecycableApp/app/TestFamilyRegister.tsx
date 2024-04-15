@@ -6,6 +6,7 @@ import { doc, setDoc, getDoc, collection, addDoc, getDocs} from "firebase/firest
 
 const TestFamilyRegister = () => {
     const [patientFirstName, setPatientFirstName] = useState('');
+    const [patientMiddleName, setPatientMiddleName] = useState('');
     const [patientLastName, setPatientLastName] = useState('');
     const [patientBirthday, setPatientBirthday] = useState(new Date());
     const [patientGender, setPatientGender] = useState('');
@@ -20,7 +21,7 @@ const TestFamilyRegister = () => {
   
     const handleAddFamilyMember = () => {
       const newMemberID = generateID(patientFirstName, patientLastName, patientBirthday.getFullYear());
-      setFamilyMembers([...familyMembers, { fullName: '', birthday: new Date(), docRef: newMemberID }]);
+      setFamilyMembers([...familyMembers, { fullName: { firstName: '', middleName: '', lastName: '' }, birthday: new Date(), docRef: newMemberID }]);
     };
   
     const handleSave = async () => {
@@ -28,20 +29,25 @@ const TestFamilyRegister = () => {
       const patientID = generateID(patientFirstName, patientLastName, patientBirthday.getFullYear());
       const patientDocRef = doc(db, "Patients", patientID);
       const patientData = {
-        fullName: `${patientFirstName} ${patientLastName}`,
+        fullName: {
+          firstName: patientFirstName,
+          middleName: patientMiddleName,
+          lastName: patientLastName
+        },
         birthdate: patientBirthday,
         gender: patientGender,
         healthHistory: patientHealthHistory.split(',').map(item => item.trim()),
         familyMembers: familyMembers.map(member => ({
           fullName: member.fullName,
           birthday: member.birthday,
-          docRef: generateID(member.fullName.split(' ')[0], member.fullName.split(' ')[1], member.birthday.getFullYear())
+          docRef: generateID(member.fullName.firstName, member.fullName.lastName, member.birthday.getFullYear())
         }))
       };
       await setDoc(patientDocRef, patientData);
 
       // Reset form fields after saving
       setPatientFirstName('');
+      setPatientMiddleName('');
       setPatientLastName('');
       setPatientBirthday(new Date());
       setPatientGender('');
@@ -49,9 +55,9 @@ const TestFamilyRegister = () => {
       setFamilyMembers([]);
     };
   
-    const handleFamilyMemberNameChange = (index, text) => {
+    const handleFamilyMemberNameChange = (index, fieldName, text) => {
       const updatedFamilyMembers = [...familyMembers];
-      updatedFamilyMembers[index].fullName = text;
+      updatedFamilyMembers[index].fullName[fieldName] = text;
       setFamilyMembers(updatedFamilyMembers);
     };
   
@@ -69,6 +75,12 @@ const TestFamilyRegister = () => {
             placeholder="Patient First Name"
             value={patientFirstName}
             onChangeText={setPatientFirstName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Patient Middle Name"
+            value={patientMiddleName}
+            onChangeText={setPatientMiddleName}
           />
           <TextInput
             style={styles.input}
@@ -110,9 +122,21 @@ const TestFamilyRegister = () => {
             <View key={index} style={styles.familyMemberItem}>
               <TextInput
                 style={styles.input}
-                placeholder="Full Name"
-                value={member.fullName}
-                onChangeText={(text) => handleFamilyMemberNameChange(index, text)}
+                placeholder="First Name"
+                value={member.fullName.firstName}
+                onChangeText={(text) => handleFamilyMemberNameChange(index, 'firstName', text)}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Middle Name"
+                value={member.fullName.middleName}
+                onChangeText={(text) => handleFamilyMemberNameChange(index, 'middleName', text)}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Last Name"
+                value={member.fullName.lastName}
+                onChangeText={(text) => handleFamilyMemberNameChange(index, 'lastName', text)}
               />
               <Button title="Select Birthday" onPress={() => setShowFamilyMemberDatePicker(true)} />
               {showFamilyMemberDatePicker && (
@@ -133,8 +157,6 @@ const TestFamilyRegister = () => {
     );
   };
 
-
-  
 const styles = StyleSheet.create({
     container: {
       flexGrow: 1,
@@ -158,11 +180,6 @@ const styles = StyleSheet.create({
     },
     familyMemberContainer: {
       marginBottom: 20,
-    },
-    familyMemberHeader: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginBottom: 10,
     },
     familyMemberItem: {
       marginBottom: 10,
