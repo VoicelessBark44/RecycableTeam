@@ -26,6 +26,7 @@ import EMR from './EMR';
 import Search from './Search';
 import PatientSignUp from './PatientSignUp';
 import TestFamilyRegister from './TestFamilyRegister';
+import LoginHome from './LoginHome';
 
 const Stack = createNativeStackNavigator();
 
@@ -52,6 +53,7 @@ function index(){
                 <Stack.Screen name = 'Analytics' component={Analytics} options={{ title: "Analytics Page" }} />
                 <Stack.Screen name = 'EMR' component={EMR} options={{ title: "EMR Page" }} />
                 <Stack.Screen name = 'Search' component={Search} options={{ title: "Search Page" }} />
+                <Stack.Screen name = 'LoginHome' component={LoginHome} options={{ title: "Login Home" }} />
             </Stack.Navigator>
         </NavigationContainer>
     )

@@ -2,6 +2,7 @@ import { Text, TextInput, View, TouchableOpacity, StyleSheet, FlatList } from "r
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './Firebase'; // Import your Firebase configuration
+import HealthHistory from "./HealthHistory";
 
 const Search = ({ navigation, route }) => {
     const { userData } = route.params;
@@ -9,6 +10,7 @@ const Search = ({ navigation, route }) => {
     const [patients, setPatients] = useState([]);
     const [filteredPatients, setFilteredPatients] = useState([]);
     const [loading, setLoading] = useState(true); // Added loading state
+
 
     useEffect(() => {
         fetchPatients();
@@ -21,8 +23,21 @@ const Search = ({ navigation, route }) => {
             const patientsData = snapshot.docs.map(doc => ({
                 id: doc.id,
                 firstName: doc.data()?.fullName?.firstName || '',
+                middleName: doc.data()?.fullName?.middleName || '',
                 lastName: doc.data()?.fullName?.lastName || '',
                 medicalID: doc.data()?.medicalID || '',
+                gender: doc.data()?.gender || '',
+                fullName: doc.data()?.fullName || '',
+                familyMembers: doc.data()?.familyMembers || '',
+                birthdate: doc.data()?.birthdate || '',
+                healthHistory: doc.data()?.healthHistory || '',
+                address: doc.data()?.address || '',
+                city: doc.data()?.city || '',
+                maritalStatus: doc.data()?.maritalStatus || '',
+                phoneNumber: doc.data()?.phoneNumber || '',
+                state: doc.data()?.state || '',
+                zip: doc.data()?.zip || '',
+                email: doc.data()?.email || '',
                 // Add other fields you need from the document
             }));
             setPatients(patientsData);
@@ -44,7 +59,7 @@ const Search = ({ navigation, route }) => {
 
     const handleNamePress = (patient) => {
         // Handle navigation or other actions when a patient is selected
-        console.log('Selected patient:', patient);
+        //console.log('Selected patient:', patient.id);
         navigation.navigate('Profile', { patient });
     };
 

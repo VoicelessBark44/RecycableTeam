@@ -46,7 +46,7 @@ const Login = ({navigation, route}) => {
 
         const user = auth.currentUser;
         if (user != null) {
-            navigation.navigate("Home", {userData});
+            navigation.navigate("LoginHome", {userData});
         } else {
             //IDK yet
         }

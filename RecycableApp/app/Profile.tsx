@@ -5,19 +5,20 @@ import { useNavigation } from '@react-navigation/native';
 
 const Profile = ({navigation, route}) => {
     const { id } = useLocalSearchParams();
-    const {userData} = route.params;
+    const {patient} = route.params;
+    //console.log(patient);
     return (
         <View style = {styles.container}>
             <View style={styles.row}>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate("PatientInfo", { userData })}
+                    onPress={() => navigation.navigate("PatientInfo", { patient: patient })}
                 >
                     <Text style={styles.buttonText}>Patient Info</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate("HealthHistory", { userData })}
+                    onPress={() => navigation.navigate("HealthHistory", { patient })}
                 >
                     <Text style={styles.buttonText}>Health History</Text>
                 </TouchableOpacity>
@@ -25,13 +26,13 @@ const Profile = ({navigation, route}) => {
             <View style={styles.row}>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate("Family", { userData })}
+                    onPress={() => navigation.navigate("Family", { patient })}
                 >
                     <Text style={styles.buttonText}>Family</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate("Appointments", { userData })}
+                    onPress={() => navigation.navigate("Appointments", { patient })}
                 >
                     <Text style={styles.buttonText}>Appointments</Text>
                 </TouchableOpacity>
@@ -39,7 +40,7 @@ const Profile = ({navigation, route}) => {
             <View style={styles.row}>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate("BookAppointment", { userData })}
+                    onPress={() => navigation.navigate("BookAppointment", { patient })}
                 >
                     <Text style={styles.buttonText}>Book Appointment</Text>
                 </TouchableOpacity>

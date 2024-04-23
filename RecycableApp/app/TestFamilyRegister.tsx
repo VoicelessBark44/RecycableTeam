@@ -14,6 +14,13 @@ const TestFamilyRegister = () => {
     const [showPatientDatePicker, setShowPatientDatePicker] = useState(false);
     const [showFamilyMemberDatePicker, setShowFamilyMemberDatePicker] = useState(false);
     const [familyMembers, setFamilyMembers] = useState([]);
+    const [patientMaritalStatus, setPatientMaritalStatus] = useState('');
+    const [patientAddress, setPatientAddress] = useState('');
+    const [patientCity, setPatientCity] = useState('');
+    const [patientState, setPatientState] = useState('');
+    const [patientZip, setPatientZip] = useState('');
+    const [patientPhoneNumber, setPatientPhoneNumber] = useState('');
+    const [patientEmail, setPatientEmail] = useState('');
   
     const generateID = (firstName, lastName, birthYear) => {
       return `${firstName}${lastName}${birthYear}`;
@@ -36,6 +43,13 @@ const TestFamilyRegister = () => {
         },
         birthdate: patientBirthday,
         gender: patientGender,
+        maritalStatus: patientMaritalStatus,
+        address: patientAddress,
+        city: patientCity,
+        state: patientState,
+        zip: patientZip,
+        phoneNumber: patientPhoneNumber,
+        email: patientEmail,
         healthHistory: patientHealthHistory.split(',').map(item => item.trim()),
         familyMembers: familyMembers.map(member => ({
           fullName: member.fullName,
@@ -53,6 +67,13 @@ const TestFamilyRegister = () => {
       setPatientGender('');
       setPatientHealthHistory('');
       setFamilyMembers([]);
+      setPatientMaritalStatus('');
+      setPatientAddress('');
+      setPatientCity('');
+      setPatientState('');
+      setPatientZip('');
+      setPatientPhoneNumber('');
+      setPatientEmail('');
     };
   
     const handleFamilyMemberNameChange = (index, fieldName, text) => {
@@ -65,6 +86,24 @@ const TestFamilyRegister = () => {
       const updatedFamilyMembers = [...familyMembers];
       updatedFamilyMembers[index].birthday = selectedDate || new Date();
       setFamilyMembers(updatedFamilyMembers);
+    };
+
+    const handlePhoneNumberChange = (text) => {
+      // Remove all non-digit characters from input
+      const formattedPhoneNumber = text.replace(/\D/g, '');
+      // Auto-format the phone number as (XXX) XXX-XXXX
+      let formattedValue = '';
+      for (let i = 0; i < formattedPhoneNumber.length; i++) {
+          if (i === 0) {
+              formattedValue += '(';
+          } else if (i === 3) {
+              formattedValue += ') ';
+          } else if (i === 6) {
+              formattedValue += ' ';
+          }
+          formattedValue += formattedPhoneNumber[i];
+      }
+      setPatientPhoneNumber(formattedValue);
     };
   
     return (
@@ -99,6 +138,49 @@ const TestFamilyRegister = () => {
             placeholder="Health History (comma separated)"
             value={patientHealthHistory}
             onChangeText={setPatientHealthHistory}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Marital Status"
+            value={patientMaritalStatus}
+            onChangeText={setPatientMaritalStatus}
+            />
+          <TextInput
+            style={styles.input}
+            placeholder="Address"
+            value={patientAddress}
+            onChangeText={setPatientAddress}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="City"
+            value={patientCity}
+            onChangeText={setPatientCity}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="State"
+            value={patientState}
+            onChangeText={setPatientState}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="ZIP"
+            value={patientZip}
+            onChangeText={setPatientZip}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Phone Number"
+            value={patientPhoneNumber}
+            onChangeText={handlePhoneNumberChange}
+            keyboardType='phone-pad'
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={patientEmail}
+            onChangeText={setPatientEmail}
           />
           <Button title="Select Patient Birthday" onPress={() => setShowPatientDatePicker(true)} />
           {showPatientDatePicker && (

@@ -5,14 +5,16 @@ import React from "react";
 
 const PatientInfo = ({navigation, route}) => {
     const { id } = useLocalSearchParams();
-    const { userData } = route.params;
-    const dummyData = [['Name', 'John Doe'], ['Gender', 'Male'], ['Race', 'White'], ['DOB', '2002-10-27'], ['Marital Status', 'Single'], ['Address', '123 Fake Way'], ['City', 'Los Angeles'], ['State', 'CA'], ['ZIP', 12345], ['Phone Number', '916-123-4567'], ['Email', 'test@gmail.com'], ['SSN', 123456789]]
-
+    const { patient } = route.params;
+    //console.log('Test: ', patient);
+    //console.log(patient.fullName);
+    //console.log(patient.fullName.middleName);
+    const patientInfo = [['First Name', patient.firstName], ['Middle Name', patient.middleName], ['Last Name', patient.lastName], ['Gender', patient.gender], ['Date of Birth'], ['Marital Status', patient.maritalStatus], ['Address', patient.address], ['City', patient.city], ['State', patient.state], ['Zip', patient.zip], ['Phone Number', patient.phoneNumber], ['Email', patient.email]];
     return (
         <View style={styles.container}>
             <View style = {styles.patientContainer}>
                 <FlatList
-                    data={dummyData}
+                    data={patientInfo}
                     renderItem={({ item }) => (
                         <View>
                             <Text style={styles.infoText}>{item[0]}: {item[1]}</Text>
