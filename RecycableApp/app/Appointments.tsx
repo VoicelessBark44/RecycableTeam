@@ -1,11 +1,18 @@
 import { Link, useLocalSearchParams } from "expo-router";
 import { Text, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
+import { SelectList } from 'react-native-dropdown-select-list';
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 
+function Appointments(){
 
-const Appointments = ({ navigation, route }) => {
-    const { id } = useLocalSearchParams();
-    const { userData } = route.params;
+    const navigation = useNavigation<any>();
+
+    const userData = {
+        Data1: '1',
+        Data2: true
+    };
+
     const dummyData = [
         {
             name: "Will Smith",
@@ -37,9 +44,25 @@ const Appointments = ({ navigation, route }) => {
         }
     ]
 
+    //for the drop down list below
+    const [selected, setSelected] = React.useState("");
+    function handleSelection(){
+
+    }
+
+    var button_BookAppointment =
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("BookAppointment", { userData })}
+        >
+            <Text style={styles.buttonText}>Book Appointment</Text>
+        </TouchableOpacity>
+
+    var displayAppointments
+
     return (
         <View style={styles.container}>
-            <View style={styles.appointmentStyling}>
+            {/*<View style={styles.appointmentStyling}>
                 <Text style={styles.headerText}>List of Appointments:</Text>
                 <FlatList
                     data={dummyData}
@@ -53,7 +76,80 @@ const Appointments = ({ navigation, route }) => {
                     )}
                 />
             </View>
+            <View>
+                {button_BookAppointment}
+                </View>*/}
 
+            
+            <View style={styles.appointmentStyling}>
+                {/*Upcoming Appointments*/}
+                <View>
+                    <Text style={styles.headerText}>Upcoming Appointments:</Text>
+                </View>
+
+                <View>
+                    {/* flat list is replacing the hard coded list from before as this can work with database data and print out the entire list at once */}
+                    <FlatList
+                        data={dummyData}
+                        horizontal={true}
+                        renderItem={({ item }) => (
+                            <View style={styles.appointBox}>
+                                <View style={styles.listRow}>
+                                    <Text style={styles.infoText}>Customer:</Text>
+                                    <Text style={styles.infoText}> {item.name}</Text>
+                                </View>
+                                <View style={styles.listRow}>
+                                    <Text style={styles.infoText}>Service:</Text>
+                                    <Text style={styles.infoText}>{item.type}</Text>
+                                </View>
+                                <View style={styles.listRow}>
+                                    <Text style={styles.infoText}>Date:</Text>
+                                    <Text style={styles.infoText}>{item.date}</Text>
+                                </View>
+                                <View style={styles.listRow}>
+                                    <Text style={styles.infoText}>Time:</Text>
+                                    <Text style={styles.infoText}>{item.physician}</Text>
+                                </View>
+                            </View>
+                        )}
+                    />
+                </View>
+                <View>
+                    {/*Past Appointments*/}
+                    <View>
+                        <Text style={styles.headerText}>Past Appointments:</Text>
+                    </View>
+
+                    {/* flat list is replacing the hard coded list from before as this can work with database data and print out the entire list at once */}
+                    <FlatList
+                        data={dummyData}
+                        horizontal={true}
+                        renderItem={({ item }) => (
+                            <View style={styles.appointBox}>
+                                <View style={styles.listRow}>
+                                    <Text style={styles.infoText}>Customer:</Text>
+                                    <Text style={styles.infoText}> {item.name}</Text>
+                                </View>
+                                <View style={styles.listRow}>
+                                    <Text style={styles.infoText}>Service:</Text>
+                                    <Text style={styles.infoText}>{item.type}</Text>
+                                </View>
+                                <View style={styles.listRow}>
+                                    <Text style={styles.infoText}>Date:</Text>
+                                    <Text style={styles.infoText}>{item.date}</Text>
+                                </View>
+                                <View style={styles.listRow}>
+                                    <Text style={styles.infoText}>Time:</Text>
+                                    <Text style={styles.infoText}>{item.physician}</Text>
+                                </View>
+                            </View>
+                        )}
+                    />
+                </View>
+                <View>
+                    {button_BookAppointment}
+                </View>
+            </View>
         </View>
     );
 }
@@ -61,42 +157,47 @@ const Appointments = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "baseline",
         backgroundColor: "#bfefff",
     },
-    row: {
-        flexDirection: "row",
-    },
     button: {
-        width: 150,
-        height: 100,
-        margin: 10,
+        width: '90%',
         backgroundColor: "lightblue",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        borderRadius: 8,
+        alignSelf: 'center',
     },
     buttonText: {
-        fontSize: 16,
-        fontWeight: "bold",
+        fontWeight: 'bold',
+        fontSize: 22,
+        textAlign: 'center'
     },
     infoText: {
         fontSize: 16,
+        fontWeight: 'bold'
     },
     headerText: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: "bold",
         paddingVertical: 5
     },
     appointmentStyling: {
         paddingLeft: 20,
         paddingTop: 10,
-        width: '90%'
     },
-    listStyling: {
-        borderTopWidth: 1,
-        paddingVertical: 5,
-    }
+    listRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    // white appointment block
+    appointBox: {
+        backgroundColor: "lightblue",
+        margin: 10,
+        borderRadius: 20,
+        padding: 15,
+        height: 125
+
+    },
 });
 
 export default Appointments;

@@ -1,75 +1,140 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import React from "react";
 import { useNavigation } from '@react-navigation/native';
 
-const Profile = ({navigation, route}) => {
-    const { id } = useLocalSearchParams();
-    const {userData} = route.params;
+function Profile(){
+    const navigation = useNavigation<any>();
+
+    const userData = {
+        Data1: '1',
+        Data2: true
+    };
+
+    // all buttons
+    var button_PatientInfo =
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("PatientInfo", { userData })}
+        >
+            <Text style={styles.buttonText}>Patient Info</Text>
+        </TouchableOpacity>
+
+    var button_EMR =
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("EMR", { userData })}
+        >
+            <Text style={styles.buttonText}>EMR</Text>
+        </TouchableOpacity>
+    
+    var button_HealthHistory =
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("HealthHistory", { userData })}
+        >
+            <Text style={styles.buttonText}>Health History</Text>
+        </TouchableOpacity>
+
+    var button_Family = 
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Family", { userData })}
+        >
+            <Text style={styles.buttonText}>Family</Text>
+        </TouchableOpacity>
+    
+    var button_MedicalDiagnosis = 
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("MedicalDiagnosis", { userData })}
+        >
+            <Text style={styles.buttonText}>Medical Diagnosis</Text>
+        </TouchableOpacity>
+    
+    var button_LabTests = 
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("LabTest", { userData })}
+        >
+            <Text style={styles.buttonText}>Lab Tests</Text>
+        </TouchableOpacity>
+    
+    var button_Prescription = 
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Prescription", { userData })}
+        >
+            <Text style={styles.buttonText}>Prescription</Text>
+        </TouchableOpacity>
+    
+    var button_Analytics = 
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Analytics", { userData })}
+        >
+            <Text style={styles.buttonText}>Analytics</Text>
+        </TouchableOpacity>
+
+    // displays all buttons from array
+    var displayButtons = () => {
+        var row = []
+        var buttonsArray = []
+        buttonsArray.push(button_PatientInfo, button_EMR, button_HealthHistory, button_Family, button_MedicalDiagnosis, button_LabTests, button_Prescription, button_Analytics)
+
+        for(let i = 0 ; i < buttonsArray.length ; i+=2){
+            buttonsArray.slice(i, i+1).map((item, j) => {
+                row.push(
+                    <View style = {styles.row} key={j}>
+                        {item}{buttonsArray[i+1]}
+                    </View>
+                )
+            })
+        }
+        return (
+            <View style={styles.buttonContainer}>
+                {row.map((item, i) => <View key={i}>{item}</View>)}
+            </View>
+        )
+        
+    }
+
     return (
-        <View style = {styles.container}>
-            <View style={styles.row}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate("PatientInfo", { userData })}
-                >
-                    <Text style={styles.buttonText}>Patient Info</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate("HealthHistory", { userData })}
-                >
-                    <Text style={styles.buttonText}>Health History</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.row}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate("Family", { userData })}
-                >
-                    <Text style={styles.buttonText}>Family</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate("Appointments", { userData })}
-                >
-                    <Text style={styles.buttonText}>Appointments</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.row}>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => navigation.navigate("BookAppointment", { userData })}
-                >
-                    <Text style={styles.buttonText}>Book Appointment</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        <ScrollView style={styles.container}>
+            {displayButtons()}
+        </ScrollView>
+        
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        //justifyContent: "center",
+        //alignItems: "center",
         backgroundColor: "#bfefff",
+    },
+    buttonContainer: {
+        //flexDirection: 'column',
+        margin: 10,
     },
     row: {
         flexDirection: "row",
+        justifyContent: 'space-evenly',
     },
     button: {
-        width: 160,
-        height: 100,
-        margin: 10,
+        width: '50%',
         backgroundColor: "lightblue",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 10,
+        padding: 10,
+        margin: 10,
+        borderRadius: 8,
+        justifyContent: 'center'
+        //alignSelf: 'center',
     },
     buttonText: {
-        fontSize: 16,
-        fontWeight: "bold",
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 20
     },
 });
 
