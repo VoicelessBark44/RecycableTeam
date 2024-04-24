@@ -1,13 +1,19 @@
-import { Link, useLocalSearchParams } from "expo-router";
-import { Text, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
-import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list';
-import React from "react";
-
+import { Text, View, TouchableOpacity, StyleSheet, TextInput, Alert } from "react-native";
+import React, { useState } from "react";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { SelectList } from 'react-native-dropdown-select-list';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from './Firebase';
 
 const BookAppointment = ({ navigation, route }) => {
-    const { id } = useLocalSearchParams();
-    const { userData } = route.params;
-    const [selected, setSelected] = React.useState("");
+    const { patient } = route.params;
+    const [selectedAppointmentType, setSelectedAppointmentType] = useState("");
+    const [selectedPhysician, setSelectedPhysician] = useState("");
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [selectedDateTime, setSelectedDateTime] = useState(null);
+    const [notes, setNotes] = useState("");
+    const [displayedDateTime, setDisplayedDateTime] = useState("");
+
     const typeList = [
         { key: 'ROUTINE_CHECKUP', value: 'Routine Checkup' },
         { key: 'BLOOD_TEST', value: 'Blood Test' },
@@ -20,57 +26,126 @@ const BookAppointment = ({ navigation, route }) => {
         { key: '2', value: 'Doug Ross' },
         { key: '3', value: 'April Green' },
     ];
-    function handleTypeSelection(selected){
 
-    }
-    function handlePhysicianSelection(selected){
+    const handleTypeSelection = (value) => {
+        // Find the appointment type object in the typeList array with the selected value
+        const appointmentType = typeList.find((type) => type.key === value);
+        // Set selectedAppointmentType to the value of the appointment type
+        setSelectedAppointmentType(appointmentType.value);
+    };
+    
 
-    }
+    const handlePhysicianSelection = (value) => {
+        // Find the physician object in the physicianList array with the selected value
+        const physician = physicianList.find((physician) => physician.key === value);
+        // Set selectedPhysician to the value of the physician's name
+        setSelectedPhysician(physician.value);
+    };
+    
+
+    const handleDateConfirm = (date) => {
+        // Set seconds to zero
+        date.setSeconds(0);
+        setSelectedDateTime(date);
+        setDisplayedDateTime(formatDateTime(date));
+        hideDatePicker();
+    };
+    
+
+    const handleDateCancel = () => {
+        hideDatePicker();
+    };
+
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleBookAppointment = async () => {
+        try {
+            const appointmentRef = doc(db, 'Appointments', `${selectedPhysician}_${selectedDateTime.getTime()}`);
+            await setDoc(appointmentRef, {
+                doctor: selectedPhysician,
+                date: selectedDateTime,
+                service: selectedAppointmentType,
+                notes: notes,
+            });
+            Alert.alert('Appointment added successfully!');
+        } catch (error) {
+            console.error('Error adding appointment:', error);
+            Alert.alert('Failed to add appointment.');
+        }
+    };
+    
+
+    // Helper function to format date and time
+    const formatDateTime = (dateTime) => {
+        if (dateTime) {
+            const formattedDate = dateTime.toLocaleDateString();
+            const formattedTime = dateTime.toLocaleTimeString();
+            return `${formattedDate} ${formattedTime}`;
+        }
+        return "";
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.appointmentStyling}>
-                <View>
-                    <Text style={styles.headerText}>Select the Appointment Type:</Text>
-                    <SelectList
-                        setSelected = {(val) => setSelected(val)}
-                        data={typeList}
-                        boxStyles = {styles.dropDown}
-                        dropdownStyles = {{backgroundColor:'white'}}
-                        maxHeight = {270}
-                        save = 'key'
-                        search = {false}
-                        placeholder = "N/A"
-                        onSelect = {() => handleTypeSelection(selected) }
-                    />
-                </View>
-                <View>
-                    <Text style={styles.headerText}>Select your physician:</Text>
-                    <SelectList
-                        setSelected={(val) => setSelected(val)}
-                        data={physicianList}
-                        boxStyles={styles.dropDown}
-                        dropdownStyles={{ backgroundColor: 'white' }}
-                        maxHeight={270}
-                        save='key'
-                        search={false}
-                        placeholder="N/A"
-                        onSelect = {() => handlePhysicianSelection(selected) }
-                    />
-                </View>
-                <View>
-                    <Text style = {{borderTopWidth: 1, borderBottomWidth: 1}}>Placeholder for selecting the date/time</Text>
-                </View>
-                <View>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => alert('Book Appointment button pressed!')}
-                    >
-                        <Text style={styles.buttonText}>Book Appointment</Text>
-                    </TouchableOpacity>
-                </View>
+                <Text style={styles.headerText}>Select the Appointment Type:</Text>
+                <SelectList
+                    setSelected={(val) => setSelectedAppointmentType(val)}
+                    data={typeList}
+                    boxStyles={styles.dropDown}
+                    dropdownStyles={{ backgroundColor: 'white' }}
+                    maxHeight={270}
+                    save='key'
+                    search={false}
+                    placeholder="N/A"
+                    onSelect={() => handleTypeSelection(selectedAppointmentType)}
+                />
+                <Text style={styles.headerText}>Select your physician:</Text>
+                <SelectList
+                    setSelected={(val) => setSelectedPhysician(val)}
+                    data={physicianList}
+                    boxStyles={styles.dropDown}
+                    dropdownStyles={{ backgroundColor: 'white' }}
+                    maxHeight={270}
+                    save='key'
+                    search={false}
+                    placeholder="N/A"
+                    onSelect={() => handlePhysicianSelection(selectedPhysician)}
+                />
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={showDatePicker}
+                >
+                    <Text style={styles.buttonText}>Select Date and Time</Text>
+                </TouchableOpacity>
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="datetime"
+                    onConfirm={handleDateConfirm}
+                    onCancel={handleDateCancel}
+                />
+                {displayedDateTime !== "" && (
+                    <Text style={styles.infoText}>Selected Date and Time: {displayedDateTime}</Text>
+                )}
+                <TextInput
+                    placeholder="Enter Notes"
+                    onChangeText={text => setNotes(text)}
+                    value={notes}
+                    style={styles.textInput}
+                />
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleBookAppointment}
+                >
+                    <Text style={styles.buttonText}>Book Appointment</Text>
+                </TouchableOpacity>
             </View>
-
         </View>
     );
 }
@@ -81,48 +156,47 @@ const styles = StyleSheet.create({
         alignItems: "baseline",
         backgroundColor: "#bfefff",
     },
-    row: {
-        flexDirection: "row",
-    },
     button: {
         width: 200,
         height: 75,
         backgroundColor: "lightblue",
         justifyContent: "center",
         alignItems: "center",
-        borderRadius: 10
+        borderRadius: 10,
+        marginVertical: 10,
     },
     buttonText: {
         fontSize: 16,
         fontWeight: "bold",
     },
-    infoText: {
-        fontSize: 16,
-    },
     headerText: {
         fontSize: 18,
         fontWeight: "bold",
-        paddingVertical: 5
+        paddingVertical: 5,
     },
     appointmentStyling: {
         paddingLeft: 20,
         paddingTop: 10,
         width: '90%',
         rowGap: 10,
-        alignItems: 'center'
-    },
-    listStyling: {
-        borderTopWidth: 1,
-        paddingVertical: 5,
+        alignItems: 'center',
     },
     dropDown: {
         backgroundColor: 'white',
-        margin: 15,
-        paddingTop: 10,
-        //paddingBottom: 10,
-        //paddingRight: 150,
-        //paddingLeft: 100,
-        padding: 100
+        marginVertical: 15,
+        padding: 10,
+    },
+    textInput: {
+        width: '90%',
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        marginBottom: 10,
+    },
+    infoText: {
+        fontSize: 16,
     },
 });
 
