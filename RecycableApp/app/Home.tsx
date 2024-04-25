@@ -44,7 +44,7 @@ function Home(){
 
     var displayHeader = () => {
         return(
-            <View style={styles.header}><Text style={styles.headerText}>Hi, Gregory</Text></View>
+            <View style={styles.header}><Text style={styles.headerText}>Temp Home</Text></View>
         )
     }
 

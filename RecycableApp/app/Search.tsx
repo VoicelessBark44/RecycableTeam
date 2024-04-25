@@ -38,6 +38,7 @@ const Search = ({ navigation, route }) => {
                 state: doc.data()?.state || '',
                 zip: doc.data()?.zip || '',
                 email: doc.data()?.email || '',
+                prescriptions: doc.data()?.prescriptions || '',
                 // Add other fields you need from the document
             }));
             setPatients(patientsData);
