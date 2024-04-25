@@ -50,6 +50,16 @@ const HomeStack = () => {
             <Stack.Screen name='PatientSignUp' component={PatientSignUp} options={{ title: "Patient Sign Up Page" }} />
             <Stack.Screen name='TestFamilyRegister' component={TestFamilyRegister} options={{ title: "Test Family Register" }} />
             <Stack.Screen name='Search' component={Search} options={{ title: "Search Page" }} />
+            <Stack.Screen name='LoginHome' component={LoginHome} options={{ title: "Login Home Page"}} />
+            <Stack.Screen name='Profile' component={Profile} options={{ title: "Profile Page" }} />
+            <Stack.Screen name='PatientInfo' component={PatientInfo} options={{ title: "Patient Info Page" }} />
+            <Stack.Screen name='EMR' component={EMR} options={{ title: "EMR Page" }} />
+            <Stack.Screen name='HealthHistory' component={HealthHistory} options={{ title: "Health History Page" }} />
+            <Stack.Screen name='Family' component={Family} options={{ title: "Family Page" }} />
+            <Stack.Screen name='MedicalDiagnosis' component={MedicalDiagnosis} options={{ title: "Medical Diagnosis Page" }} />
+            <Stack.Screen name='LabTest' component={LabTest} options={{ title: "Lab Test Page" }} />
+            <Stack.Screen name='Prescription' component={Prescription} options={{ title: "Prescription Page" }} />
+            <Stack.Screen name='Analytics' component={Analytics} options={{ title: "Analytics Page" }} />
         </Stack.Navigator>
     )
 }
