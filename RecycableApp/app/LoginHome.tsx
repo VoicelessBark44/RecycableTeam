@@ -9,6 +9,8 @@ function LoginHome({route}){
 
     const { userData } = route.params;
 
+    console.log('Test: ', userData.firstName);
+
     var ProfileButton = 
     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Profile", { userData })}>
         <Text>Profile</Text>
@@ -39,16 +41,17 @@ function LoginHome({route}){
         <Text>Search</Text>
     </TouchableOpacity>
 
-    return (
-        <View style={styles.container}>
-            <Text>Home</Text>
-            <GestureHandlerRootView>
-                {PatientSignUpButton}
-                {FamilyRegisterButton}
-                {SearchButton}
-            </GestureHandlerRootView>
-        </View>
-    )
+return (
+    <View style={styles.container}>
+        {/* Display Hello message with user's first name */}
+        <Text style={styles.greetingText}>Hello, {userData.firstName}</Text>
+        <GestureHandlerRootView>
+            {PatientSignUpButton}
+            {FamilyRegisterButton}
+            {SearchButton}
+        </GestureHandlerRootView>
+    </View>
+)
 }
 
 const styles = StyleSheet.create({
@@ -64,6 +67,11 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 8,
         textAlign: 'center',
+    },
+    greetingText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 20,
     },
 });
 
