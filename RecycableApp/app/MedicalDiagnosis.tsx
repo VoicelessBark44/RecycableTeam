@@ -1,70 +1,109 @@
-import { Link, useLocalSearchParams } from "expo-router";
-import { Text, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { Text, View, TouchableOpacity, StyleSheet, FlatList, TextInput, Button } from "react-native";
+import firebase, { db } from './Firebase'; // Import your Firebase configuration
+import { doc , updateDoc} from "firebase/firestore";
 
 const MedicalDiagnosis = ({ navigation, route }) => {
-    const { id } = useLocalSearchParams();
-    const { userData } = route.params;
-    const primaryDummyData = 'ICD-10: I10 - essential (primary) hypertension'
-    const activeDummyData = [
-        'ICD-10: E11.9 - type II diabetes mellitus without complications', 'ICD-10: E13.9 - other specified diabetes mellitus without complications'
-    ]
+    const { patient } = route.params;
+    const [activeDiagnoses, setActiveDiagnoses] = useState(patient.healthHistory);
+
+    // Function to add a new health condition
+    const addDiagnosis = () => {
+        // Create a new array by copying the existing one and adding the new condition
+        const updatedDiagnoses = [...activeDiagnoses, '']; // Add an empty string for the new condition
+        setActiveDiagnoses(updatedDiagnoses);
+    };
+
+    // Function to remove a health condition by index
+    const removeDiagnosis = (index) => {
+        // Create a new array by filtering out the condition at the specified index
+        const updatedDiagnoses = activeDiagnoses.filter((_, i) => i !== index);
+        setActiveDiagnoses(updatedDiagnoses);
+    };
+
+    // Function to handle changes in a health condition
+    const handleChange = (text, index) => {
+        // Update the condition at the specified index
+        const updatedDiagnoses = [...activeDiagnoses];
+        updatedDiagnoses[index] = text;
+        setActiveDiagnoses(updatedDiagnoses);
+    };
+
+    // Function to save the changes to Firestore
+    const saveChanges = async () => {
+        try {
+            // Update the healthHistory field in the Firestore document
+            const patientRef = doc(db, 'Patients', patient.id);
+            await updateDoc(patientRef, {
+                healthHistory: activeDiagnoses
+            });
+            console.log("Changes saved successfully!");
+        } catch (error) {
+            console.error("Error saving changes:", error);
+        }
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.familyStyling}>
-                <Text style={styles.headerText}>Primary Diagnosis:</Text>
-                <Text style={styles.infoText}>{primaryDummyData}</Text>
                 <Text style={styles.headerText}>Active Diagnoses:</Text>
                 <FlatList
-                    data={activeDummyData}
-                    renderItem={({ item }) => (
-                        <View>
-                            <Text>{item}</Text>
+                    data={activeDiagnoses}
+                    renderItem={({ item, index }) => (
+                        <View style={styles.row}>
+                            <TextInput
+                                style={styles.input}
+                                value={item}
+                                onChangeText={(text) => handleChange(text, index)}
+                            />
+                            <TouchableOpacity onPress={() => removeDiagnosis(index)}>
+                                <Text style={styles.removeButton}>Remove</Text>
+                            </TouchableOpacity>
                         </View>
                     )}
+                    keyExtractor={(item, index) => index.toString()}
                 />
-                
+                <Button title="Add Diagnosis" onPress={addDiagnosis} />
+                <Button title="Save Changes" onPress={saveChanges} />
             </View>
-
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: "baseline",
+        alignItems: "center",
+        justifyContent: "center",
         backgroundColor: "#bfefff",
     },
     row: {
         flexDirection: "row",
-    },
-    button: {
-        width: 150,
-        height: 100,
-        margin: 10,
-        backgroundColor: "lightblue",
-        justifyContent: "center",
         alignItems: "center",
-        borderRadius: 10,
+        marginBottom: 10,
     },
-    buttonText: {
-        fontSize: 16,
-        fontWeight: "bold",
+    input: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        padding: 10,
+        marginRight: 10,
     },
-    infoText: {
-        fontSize: 16,
+    removeButton: {
+        color: "red",
+        marginLeft: 10,
     },
     headerText: {
         fontSize: 16,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        marginBottom: 10,
     },
     familyStyling: {
-        paddingLeft: 20,
-        paddingTop: 10
-    }
+        width: "80%",
+        paddingHorizontal: 20,
+        paddingTop: 10,
+    },
 });
 
 export default MedicalDiagnosis;
