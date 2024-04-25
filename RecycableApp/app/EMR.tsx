@@ -1,35 +1,59 @@
-import { Link, useLocalSearchParams } from "expo-router";
 import { Text, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
 import React from "react";
 
+const EMR = ({ route }) => {
+    const { patient } = route.params;
 
-const EMR = ({ navigation, route }) => {
-    const { id } = useLocalSearchParams();
-    const { userData } = route.params;
-    const dummyData = [
-        ['Full Name', 'John Doe'], ['Gender', 'Male'], ['Race', 'White'], ['DOB', '2002-10-27'], ['Marital Status', 'Single'], ['Address', '123 Fake Way'], ['City', 'Los Angeles'], ['State', 'CA'], ['ZIP', 12345], ['Phone Number', '916-123-4567'], ['Email', 'test@gmail.com'], ['SSN', 123456789]
+    //const birthDate = patient.dateOfBirth.toDate();
+
+    const patientInfo = [
+        ['First Name', patient.firstName], 
+        ['Middle Name', patient.middleName], 
+        ['Last Name', patient.lastName], 
+        ['Gender', patient.gender], 
+        ['Date of Birth', ''], 
+        ['Marital Status', patient.maritalStatus], 
+        ['Address', patient.address], 
+        ['City', patient.city], 
+        ['State', patient.state], 
+        ['Zip', patient.zip], 
+        ['Phone Number', patient.phoneNumber], 
+        ['Email', patient.email]
     ];
+
+    const familyMembers = patient.familyMembers;
 
     return (
         <View style={styles.container}>
-            <Text style={styles.headerText}>Electronic Medical Record (EMR):</Text>
-            <View style={styles.listStyling}>
-                <FlatList
-                    data={dummyData}
-                    horizontal={false}
-                    renderItem={({ item }) => (
-                        <View style={styles.row}>
-                            <View style={styles.cell}>
-                                <Text style={styles.tableHeaderText}>{item[0]}</Text>
-                            </View>
-                            <View style={styles.cell}>
-                                <Text style={styles.cellText}>{item[1]}</Text>
-                            </View>
-                        </View>
-                    )}
-                />
+    <Text style={styles.headerText}>Electronic Medical Record (EMR):</Text>
+    <View style={styles.listStyling}>
+        {/* Render patient information */}
+        {patientInfo.map((info, index) => (
+            <View style={styles.row} key={index}>
+                <View style={styles.cell}>
+                    <Text style={styles.tableHeaderText}>{info[0]}</Text>
+                </View>
+                <View style={styles.cell}>
+                    <Text style={styles.cellText}>{info[1]}</Text>
+                </View>
             </View>
-        </View>
+        ))}
+    </View>
+    <Text style={styles.headerText}>Family Members:</Text>
+    <View style={styles.listStyling}>
+        {/* Render family members */}
+        {familyMembers.map((familyMember, index) => (
+            <View style={styles.row} key={index}>
+                <View style={styles.cell2}>
+                    <Text style={styles.tableHeaderText}>
+                        {familyMember.fullName.firstName} {familyMember.fullName.middleName} {familyMember.fullName.lastName}
+                    </Text>
+                </View>
+            </View>
+        ))}
+    </View>
+</View>
+
     );
 }
 
@@ -47,6 +71,9 @@ const styles = StyleSheet.create({
     cell: {
         width: '50%',
         borderWidth: 1
+    },
+    cell2: {
+        padding: 5,
     },
     button: {
         width: 150,
