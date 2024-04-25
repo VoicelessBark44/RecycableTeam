@@ -3,19 +3,16 @@ import { Text, View, TouchableOpacity, StyleSheet, ScrollView } from "react-nati
 import React from "react";
 import { useNavigation } from '@react-navigation/native';
 
-function Profile(){
-    const navigation = useNavigation<any>();
+function Profile({navigation, route}){
 
-    const userData = {
-        Data1: '1',
-        Data2: true
-    };
+    const { id } = useLocalSearchParams();
+    const {patient} = route.params;
 
     // all buttons
     var button_PatientInfo =
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("PatientInfo", { userData })}
+            onPress={() => navigation.navigate("PatientInfo", { patient: patient })}
         >
             <Text style={styles.buttonText}>Patient Info</Text>
         </TouchableOpacity>
@@ -23,7 +20,7 @@ function Profile(){
     var button_EMR =
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("EMR", { userData })}
+            onPress={() => navigation.navigate("EMR", { patient: patient })}
         >
             <Text style={styles.buttonText}>EMR</Text>
         </TouchableOpacity>
@@ -31,7 +28,7 @@ function Profile(){
     var button_HealthHistory =
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("HealthHistory", { userData })}
+            onPress={() => navigation.navigate("HealthHistory", { patient: patient })}
         >
             <Text style={styles.buttonText}>Health History</Text>
         </TouchableOpacity>
@@ -39,7 +36,7 @@ function Profile(){
     var button_Family = 
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Family", { userData })}
+            onPress={() => navigation.navigate("Family", { patient: patient })}
         >
             <Text style={styles.buttonText}>Family</Text>
         </TouchableOpacity>
@@ -47,7 +44,7 @@ function Profile(){
     var button_MedicalDiagnosis = 
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("MedicalDiagnosis", { userData })}
+            onPress={() => navigation.navigate("MedicalDiagnosis", { patient: patient })}
         >
             <Text style={styles.buttonText}>Medical Diagnosis</Text>
         </TouchableOpacity>
@@ -55,7 +52,7 @@ function Profile(){
     var button_LabTests = 
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("LabTest", { userData })}
+            onPress={() => navigation.navigate("LabTest", { patient: patient })}
         >
             <Text style={styles.buttonText}>Lab Tests</Text>
         </TouchableOpacity>
@@ -63,7 +60,7 @@ function Profile(){
     var button_Prescription = 
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Prescription", { userData })}
+            onPress={() => navigation.navigate("Prescription", { patient: patient })}
         >
             <Text style={styles.buttonText}>Prescription</Text>
         </TouchableOpacity>
@@ -71,7 +68,7 @@ function Profile(){
     var button_Analytics = 
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Analytics", { userData })}
+            onPress={() => navigation.navigate("Analytics", { patient: patient })}
         >
             <Text style={styles.buttonText}>Analytics</Text>
         </TouchableOpacity>
