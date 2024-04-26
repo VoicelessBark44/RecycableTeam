@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState} from 'react';
 import {ImageBackground, Pressable, Text, View} from "react-native";
 import { Link , router } from "expo-router";
 
@@ -27,6 +27,7 @@ import Search from './Search';
 import PatientSignUp from './PatientSignUp';
 import TestFamilyRegister from './TestFamilyRegister';
 import LoginHome from './LoginHome';
+import AdminProfile from './AdminProfile';
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -60,6 +61,7 @@ const HomeStack = () => {
             <Stack.Screen name='LabTest' component={LabTest} options={{ title: "Lab Test Page" }} />
             <Stack.Screen name='Prescription' component={Prescription} options={{ title: "Prescription Page" }} />
             <Stack.Screen name='Analytics' component={Analytics} options={{ title: "Analytics Page" }} />
+            <Stack.Screen name='BookAppointment' component={BookAppointment} options={{ title: "Book Appointment Page" }} />
         </Stack.Navigator>
     )
 }
@@ -92,7 +94,7 @@ const ProfileStack = () => {
                     backgroundColor: '#095d7e'
                 }
             }}>
-            <Stack.Screen name='Profile' component={Profile} options={{ title: "Profile Page" }} />
+            <Stack.Screen name='AdminProfile' component={AdminProfile} options={{ title: "Admin Profile Page" }} />
             <Stack.Screen name='PatientInfo' component={PatientInfo} options={{ title: "Patient Info Page" }} />
             <Stack.Screen name='EMR' component={EMR} options={{ title: "EMR Page" }} />
             <Stack.Screen name='HealthHistory' component={HealthHistory} options={{ title: "Health History Page" }} />
@@ -115,7 +117,7 @@ function TabNavigator(){
                 headerTintColor: 'white',
                 tabBarStyle: {
                     backgroundColor: '#095d7e',
-                    height: 70,
+                    height: 90,
                 },
                 tabBarActiveTintColor: 'white',
                 tabBarInactiveTintColor: 'gray',
@@ -148,7 +150,7 @@ function TabNavigator(){
                         tabBarIcon: () => {
                             return (
                                 <ImageBackground
-                                    style={{ width: 30, height: 30 }}
+                                    style={{ width: 30, height: 40 }}
                                     source={require('./images/Appointment.png')}>
                                 </ImageBackground>
                             )
@@ -163,7 +165,7 @@ function TabNavigator(){
                     tabBarIcon: () => {
                         return (
                             <ImageBackground
-                                style={{ width: 30, height: 30 }}
+                                style={{ width: 30, height: 40 }}
                                 source={require('./images/Profile.png')}>
                             </ImageBackground>
                         )
@@ -177,6 +179,9 @@ function TabNavigator(){
 }
 
 function index(){
+
+    //const [authenticated, setAuthenticated] = useState(false);
+
     return(
         <NavigationContainer independent = {true}>
             <TabNavigator/>

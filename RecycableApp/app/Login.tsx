@@ -30,28 +30,21 @@ const Login = ({navigation, route}) => {
     const onLogin = async () => {
         console.log(email);
         console.log(password);
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
             setErrorMessage('Login Successful!');
-
+    
             const user = userCredential.user;
-            userData.userID = userCredential.user.uid;
-            //Alert.alert('Test', userData.userID);
+            userData.userID = user.uid;
             getUserData();
-        })
-        .catch((error) => {
+            
+            navigation.navigate("LoginHome", {userData});
+        } catch (error) {
             setErrorMessage('Your Password or Email \n Do not Match. Please Try Again.');
             console.log(error.message, error.code);
-        });
-
-        const user = auth.currentUser;
-        if (user != null) {
-            navigation.navigate("LoginHome", {userData});
-        } else {
-            //IDK yet
         }
-
     }
+    
 
     const getUserData = async () => {
         try {
@@ -170,13 +163,6 @@ const Login = ({navigation, route}) => {
                     onPress={() => navigation.navigate('Register')}
                 >
                 <Text>Register an Account</Text>
-                </TouchableOpacity>
-            </View>
-            <View style = {styles.button}>
-                <TouchableOpacity
-                    onPress={getTesterFunction}
-                >
-                <Text>Press Me</Text>
                 </TouchableOpacity>
             </View>
         </View>

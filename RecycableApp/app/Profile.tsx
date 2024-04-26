@@ -68,9 +68,9 @@ function Profile({navigation, route}){
     var button_Analytics = 
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Analytics", { patient: patient })}
+            onPress={() => navigation.navigate("BookAppointment", { patient: patient })}
         >
-            <Text style={styles.buttonText}>Analytics</Text>
+            <Text style={styles.buttonText}>Book Appointment</Text>
         </TouchableOpacity>
 
     // displays all buttons from array

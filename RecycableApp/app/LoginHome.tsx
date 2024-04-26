@@ -1,57 +1,52 @@
 import React from 'react';
-import { Pressable, Text, View, StyleSheet} from "react-native";
-import { TouchableOpacity, GestureHandlerRootView} from 'react-native-gesture-handler';
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-function LoginHome({route}){
-
-    const navigation = useNavigation<any>();
-
+function LoginHome({ route }) {
+    const navigation = useNavigation<any>()
     const { userData } = route.params;
 
-    console.log('Test: ', userData.firstName);
+    console.log(userData.firstName);
+    console.log(route);
 
-    var ProfileButton = 
-    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Profile", { userData })}>
-        <Text>Profile</Text>
-    </TouchableOpacity>
+    // Check if userData exists, if not, display loading indicator
+    if (!userData) {
+        return (
+            <View style={styles.container}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
-    var LoginButton = 
-    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login", { userData })}>
-        <Text>Login</Text>
-    </TouchableOpacity>
+    // Once userData is available, render the component with userData
+    return (
+        <View style={styles.container}>
+            <Text style={styles.greetingText}>Hello, {userData.firstName}</Text>
+            <GestureHandlerRootView>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate("PatientSignUp", { userData })}
+                >
+                    <Text>Patient Sign Up</Text>
+                </TouchableOpacity>
 
-    var TrackingButton = 
-    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Tracking", { userData })}>
-        <Text>Tracking</Text>
-    </TouchableOpacity>
-        
-    var PatientSignUpButton = 
-    <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate("PatientSignUp", {userData})}>
-        <Text>Patient Sign Up</Text>
-    </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate("TestFamilyRegister", { userData })}
+                >
+                    <Text>Family Register</Text>
+                </TouchableOpacity>
 
-    var FamilyRegisterButton = 
-    <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate("TestFamilyRegister", {userData})}>
-        <Text>Family Register</Text>
-    </TouchableOpacity>
-        
-    var SearchButton =
-    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Search", { userData })}>
-        <Text>Search</Text>
-    </TouchableOpacity>
-
-return (
-    <View style={styles.container}>
-        {/* Display Hello message with user's first name */}
-        <Text style={styles.greetingText}>Hello, {userData.firstName}</Text>
-        <GestureHandlerRootView>
-            {PatientSignUpButton}
-            {FamilyRegisterButton}
-            {SearchButton}
-        </GestureHandlerRootView>
-    </View>
-)
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate("Search", { userData })}
+                >
+                    <Text>Search</Text>
+                </TouchableOpacity>
+            </GestureHandlerRootView>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
