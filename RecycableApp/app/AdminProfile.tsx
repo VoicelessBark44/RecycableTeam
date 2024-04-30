@@ -10,7 +10,7 @@ function AdminProfile({ route, navigation }) {
             {/* Profile Picture */}
             <View style={styles.profilePictureContainer}>
                 <Image
-                    source={require('/Users/adriangonzalez/Documents/GitHub/RecycableTeam/RecycableApp/app/images/Profile.png')}
+                    source={require('./images/Profile.png')}
                     style={styles.profilePicture}
                 />
             </View>
