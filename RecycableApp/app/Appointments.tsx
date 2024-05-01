@@ -1,17 +1,16 @@
 import { Link, useLocalSearchParams } from "expo-router";
-import { Text, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
+import { Text, TextInput, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
 import { SelectList } from 'react-native-dropdown-select-list';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { db } from './Firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 function Appointments(){
 
     const navigation = useNavigation<any>();
 
-    const userData = {
-        Data1: '1',
-        Data2: true
-    };
+    const [loading, setLoading] = useState(true);
 
     const dummyData = [
         {
@@ -44,6 +43,30 @@ function Appointments(){
         }
     ]
 
+    useEffect(() => {
+        fetchAppointments();
+    }, []);
+
+    const fetchAppointments = async () => {
+        try {
+            const patientsCollection = collection(db, 'Patients');
+            const snapshot = await getDocs(patientsCollection);
+            const appointmentsData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                doctor: doc.data()?.doctor || '',
+                notes: doc.data()?.notes || '',
+                service: doc.data()?.service || '',
+                patient: doc.data()?.patient || '',
+                date: doc.data()?.date || '',
+                // Add other fields you need from the document
+            }));
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching patients:', error);
+            setLoading(false);
+        }
+    }
+
     //for the drop down list below
     const [selected, setSelected] = React.useState("");
     function handleSelection(){
@@ -53,12 +76,20 @@ function Appointments(){
     var button_BookAppointment =
         <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("BookAppointment", { userData })}
+            onPress={() => navigation.navigate("BookAppointment")}
         >
             <Text style={styles.buttonText}>Book Appointment</Text>
         </TouchableOpacity>
 
     var displayAppointments
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -197,6 +228,11 @@ const styles = StyleSheet.create({
         padding: 15,
         height: 125
 
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

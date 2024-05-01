@@ -6,14 +6,16 @@ import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
 import { db } from './Firebase';
 
 const BookAppointment = ({ navigation, route }) => {
-    const { patient } = route.params;
+    //const { patient } = route.params;
     const [selectedAppointmentType, setSelectedAppointmentType] = useState("");
     const [selectedPhysician, setSelectedPhysician] = useState("");
+    const [selectedPatient, setSelectedPatient] = useState("");
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [selectedDateTime, setSelectedDateTime] = useState(null);
     const [notes, setNotes] = useState("");
     const [displayedDateTime, setDisplayedDateTime] = useState("");
     const [physicianList, setPhysicianList] = useState([]);
+    const [patientList, setPatientsList] = useState([]);
 
     const typeList = [
         { key: 'ROUTINE_CHECKUP', value: 'Routine Checkup' },
@@ -40,6 +42,23 @@ const BookAppointment = ({ navigation, route }) => {
             }
         };
 
+        const fetchPatients = async () => {
+            try {
+                const patientsCollection = collection(db, 'Patients');
+                const patientsSnapshot = await getDocs(patientsCollection);
+                const patientsData = [];
+                patientsSnapshot.forEach((doc) => {
+                    const { fullName } = doc.data();
+                    const patientName = `${fullName.firstName} ${fullName.lastName}`;
+                    patientsData.push({ key: doc.id, value: patientName});
+                    //console.log(fullName);
+                });
+                setPatientsList(patientsData);
+            } catch (error) {
+                console.error('Error fetching patients: ', error);
+            }
+        }
+        fetchPatients();
         fetchDoctors();
     }, []);
 
@@ -57,6 +76,12 @@ const BookAppointment = ({ navigation, route }) => {
         // Set selectedPhysician to the value of the physician's name
         setSelectedPhysician(physician.value);
     };
+
+    const handlePatientSelection = (value) => {
+        const patient = patientList.find((patient) => patient.key === value);
+
+        setSelectedPatient(patient.value);
+    }
     
 
     const handleDateConfirm = (date) => {
@@ -85,6 +110,7 @@ const BookAppointment = ({ navigation, route }) => {
             const appointmentRef = doc(db, 'Appointments', `${selectedPhysician}_${selectedDateTime.getTime()}`);
             await setDoc(appointmentRef, {
                 doctor: selectedPhysician,
+                patient: selectedPatient,
                 date: selectedDateTime,
                 service: selectedAppointmentType,
                 notes: notes,
@@ -133,6 +159,18 @@ const BookAppointment = ({ navigation, route }) => {
                     search={false}
                     placeholder="N/A"
                     onSelect={() => handlePhysicianSelection(selectedPhysician)}
+                />
+                <Text style = {styles.headerText}>Select the Patient:</Text>
+                <SelectList
+                    setSelected={(val) => setSelectedPatient(val)}
+                    data = {patientList}
+                    boxStyles={styles.dropDown}
+                    dropdownStyles={{ backgroundColor: 'white' }}
+                    maxHeight={270}
+                    save='key'
+                    search={false}
+                    placeholder="N/A"
+                    onSelect={() => handlePatientSelection(selectedPatient)}
                 />
                 <TouchableOpacity
                     style={styles.button}
