@@ -1,8 +1,8 @@
-import { Text, View, TouchableOpacity, StyleSheet, TextInput, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SelectList } from 'react-native-dropdown-select-list';
-import { doc, setDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
 import { db } from './Firebase';
 
 const BookAppointment = ({ navigation, route }) => {
@@ -13,6 +13,7 @@ const BookAppointment = ({ navigation, route }) => {
     const [selectedDateTime, setSelectedDateTime] = useState(null);
     const [notes, setNotes] = useState("");
     const [displayedDateTime, setDisplayedDateTime] = useState("");
+    const [physicianList, setPhysicianList] = useState([]);
 
     const typeList = [
         { key: 'ROUTINE_CHECKUP', value: 'Routine Checkup' },
@@ -20,12 +21,27 @@ const BookAppointment = ({ navigation, route }) => {
         { key: 'MRI_SCAN', value: 'MRI Scan' },
         { key: 'OTHER', value: 'Other' },
     ];
-    const physicianList = [
-        { key: '0', value: 'Gregory House' },
-        { key: '1', value: 'Dana Scully' },
-        { key: '2', value: 'Doug Ross' },
-        { key: '3', value: 'April Green' },
-    ];
+    
+    useEffect(() => {
+        // Fetch the list of doctors from Firestore
+        const fetchDoctors = async () => {
+            try {
+                const doctorsCollection = collection(db, 'Users');
+                const doctorsSnapshot = await getDocs(doctorsCollection);
+                const doctorsData = [];
+                doctorsSnapshot.forEach((doc) => {
+                    const { firstName, middleName, lastName } = doc.data();
+                    const fullName = `${firstName} ${middleName ? middleName + ' ' : ''}${lastName}`;
+                    doctorsData.push({ key: doc.id, value: fullName });
+                });
+                setPhysicianList(doctorsData);
+            } catch (error) {
+                console.error('Error fetching doctors:', error);
+            }
+        };
+
+        fetchDoctors();
+    }, []);
 
     const handleTypeSelection = (value) => {
         // Find the appointment type object in the typeList array with the selected value
@@ -134,7 +150,7 @@ const BookAppointment = ({ navigation, route }) => {
                     <Text style={styles.infoText}>Selected Date and Time: {displayedDateTime}</Text>
                 )}
                 <TextInput
-                    placeholder="Enter Notes"
+                    placeholder="Enter Appointment Notes"
                     onChangeText={text => setNotes(text)}
                     value={notes}
                     style={styles.textInput}
