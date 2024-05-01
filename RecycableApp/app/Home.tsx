@@ -1,6 +1,6 @@
-import React from 'react';
-import { Pressable, Text, View, StyleSheet} from "react-native";
-import { TouchableOpacity, GestureHandlerRootView} from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import { Pressable, Text, View, StyleSheet, Modal, TouchableOpacity } from "react-native";
+//import { TouchableOpacity, GestureHandlerRootView} from 'react-native-gesture-handler';
 import { useNavigation } from "@react-navigation/native";
 
 function Home(){
@@ -12,10 +12,35 @@ function Home(){
         Data2: true
     };
 
-    var LoginButton = 
-    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login", { userData })}>
-        <Text style={styles.buttonText}>Login</Text>
-    </TouchableOpacity>
+    const [modalVisible, setModalVisible] = useState(false);
+
+    var modalWindow = 
+        <Modal
+            animationType = "fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+                setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.modalContainer}>
+                <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Are you sure you want to sign out?</Text>
+                    <View style={styles.modalButtonContainer}>
+                        <TouchableOpacity
+                            style={styles.modalButton}
+                            onPress={() => {
+                                setModalVisible(false)
+                                navigation.pop()
+                            }}>
+                            <Text style={styles.modalText}>Yes</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
+                            <Text style={styles.modalText}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        </Modal>
         
     var PatientSignUpButton = 
     <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate("PatientSignUp", {userData})}>
@@ -32,9 +57,14 @@ function Home(){
         <Text style={styles.buttonText}>Search</Text>
     </TouchableOpacity>
 
+    var SignOutButton =
+        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+            <Text style={styles.buttonText}>Sign Out</Text>
+        </TouchableOpacity>
+
     var displayButtons = () => {
         var buttonsArray = []
-        buttonsArray.push(LoginButton, PatientSignUpButton, FamilyRegisterButton, SearchButton)
+        buttonsArray.push(PatientSignUpButton, FamilyRegisterButton, SearchButton, SignOutButton)
         return (
             <View style={styles.buttonContainer}>
                 {buttonsArray.map((item, i) => <View key={i}>{item}</View>)}
@@ -48,12 +78,18 @@ function Home(){
         )
     }
 
+    var displayModalWindow = () => {
+        return (
+            <View>{modalWindow}</View>
+        )
+    }
+
     return (
-            
-        <GestureHandlerRootView style={styles.container}>
+        <View style={styles.container}>
             {displayHeader()}
             {displayButtons()}
-        </GestureHandlerRootView>
+            {displayModalWindow()}
+        </View>
 
     )
 }
@@ -89,7 +125,46 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 20
-    }
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "#bfefff",
+        borderRadius: 20,
+        borderWidth: 1,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalButtonContainer: {
+        flexDirection: 'row',
+    },
+    modalButton: {
+        backgroundColor: "lightblue",
+        paddingTop: 10,
+        paddingHorizontal: 10,
+        margin: 10,
+        borderRadius: 8,
+    },
+    modalText: {
+        color: 'black',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        textAlign: 'center',
+        textAlignVertical: 'center'
+    },
 });
 
 export default Home;

@@ -46,8 +46,7 @@ const HomeStack = () => {
             <Stack.Screen
                 name='Home' component={Home} options={{ title: "Home Screen" }} />
             <Stack.Screen name='UserPage' component={UserPage} options={{ title: "User Page" }} />
-            <Stack.Screen name='Login' component={Login} options={{ title: "Login Page" }} />
-            <Stack.Screen name='Register' component={Register} options={{ title: "Register Page" }} />
+            
             <Stack.Screen name='PatientSignUp' component={PatientSignUp} options={{ title: "Patient Sign Up Page" }} />
             <Stack.Screen name='TestFamilyRegister' component={TestFamilyRegister} options={{ title: "Test Family Register" }} />
             <Stack.Screen name='Search' component={Search} options={{ title: "Search Page" }} />
@@ -178,13 +177,39 @@ function TabNavigator(){
     )
 }
 
+const LoginStack = () => {
+    return (
+        <Stack.Navigator
+            initialRouteName='LoginInitial'
+            screenOptions={{
+                headerTintColor: 'white',
+                headerBackTitle: 'Back',
+                headerStyle: {
+                    backgroundColor: '#095d7e'
+                },
+            }}>
+            <Stack.Screen name='Login' component={Login} options={{ title: "Login Page" }} />
+            <Stack.Screen name='Register' component={Register} options={{ title: "Register Page" }} />
+            <Stack.Screen
+                options={{
+                    title: 'TabNavigator',
+                    headerShown: false
+                }}
+                name="TabNavigatorScreen"
+                component={TabNavigator}
+            />
+
+        </Stack.Navigator>
+    )
+}
+
 function index(){
 
     //const [authenticated, setAuthenticated] = useState(false);
 
     return(
         <NavigationContainer independent = {true}>
-            <TabNavigator/>
+            <LoginStack/>
         </NavigationContainer>
     )
 }
