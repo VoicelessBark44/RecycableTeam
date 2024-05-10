@@ -1,47 +1,17 @@
-import { Link, useLocalSearchParams } from "expo-router";
-import { Text, TextInput, View, TouchableOpacity, StyleSheet, FlatList } from "react-native";
-import { SelectList } from 'react-native-dropdown-select-list';
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { db } from './Firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { Swipeable } from 'react-native-gesture-handler';
+import { Text, View, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, SafeAreaView, Alert } from "react-native";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 function Appointments(){
 
     const navigation = useNavigation<any>();
 
     const [loading, setLoading] = useState(true);
-
-    const dummyData = [
-        {
-            name: "Will Smith",
-            type: "Routine Checkup",
-            date: "10/27/23, Fri, 1:00pm",
-            physician: 'Gregory House',
-            realDate: new Date("2023-10-27")
-        },
-        {
-            name: "Bob Smith",
-            type: "Blood Test",
-            date: "11/27/23, Mon, 2:00pm",
-            physician: 'Dana Scully',
-            realDate: (new Date("2023-11-27"))
-        },
-        {
-            name: "Jane Doe",
-            type: "MRI Scan",
-            date: "11/18/23, Fri, 3:00pm",
-            physician: 'Doug Ross',
-            realDate: new Date("2023-11-18")
-        },
-        {
-            name: "Melinda Jackson",
-            type: "Other",
-            date: "11/15/23, Sat, 2:00pm",
-            physician: 'April Green',
-            realDate: new Date("2023-11-15")
-        }
-    ]
+    const [appointments, setAppointments] = useState([]);
 
     useEffect(() => {
         fetchAppointments();
@@ -49,139 +19,111 @@ function Appointments(){
 
     const fetchAppointments = async () => {
         try {
-            const patientsCollection = collection(db, 'Patients');
-            const snapshot = await getDocs(patientsCollection);
+            const appointmentsCollection = collection(db, 'Appointments');
+            const snapshot = await getDocs(appointmentsCollection);
             const appointmentsData = snapshot.docs.map(doc => ({
                 id: doc.id,
-                doctor: doc.data()?.doctor || '',
-                notes: doc.data()?.notes || '',
-                service: doc.data()?.service || '',
-                patient: doc.data()?.patient || '',
-                date: doc.data()?.date || '',
+                doctor: doc.data().doctor || '',
+                notes: doc.data().notes || '',
+                service: doc.data().service || '',
+                patient: doc.data().patient || '',
+                date: doc.data().date.toDate().toString() || '', // Convert Firestore timestamp to Date object and then to string
                 // Add other fields you need from the document
             }));
+            setAppointments(appointmentsData); // Update state with fetched appointments
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching patients:', error);
+            console.error('Error fetching appointments:', error);
             setLoading(false);
         }
     }
 
-    //for the drop down list below
-    const [selected, setSelected] = React.useState("");
-    function handleSelection(){
-
+    const handleDeleteAppointment = async (id) => {
+        try {
+            const appointmentRef = doc(db, 'Appointments', id);
+            await deleteDoc(appointmentRef);
+            fetchAppointments(); // Refresh appointments after deletion
+        } catch (error) {
+            console.error('Error deleting appointment:', error);
+        }
     }
 
-    var button_BookAppointment =
-        <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("BookAppointment")}
-        >
-            <Text style={styles.buttonText}>Book Appointment</Text>
-        </TouchableOpacity>
+    const confirmDeleteAppointment = (id) => {
+        Alert.alert(
+            'Confirm Deletion',
+            'Are you sure you want to delete this appointment?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Yes',
+                    onPress: () => handleDeleteAppointment(id),
+                },
+            ],
+            { cancelable: false }
+        );
+    }
 
-    var displayAppointments
+    const renderRightActions = (id) => (
+        <TouchableOpacity style={styles.rightAction} onPress={() => confirmDeleteAppointment(id)}>
+            <Text style={styles.rightActionText}>Delete</Text>
+        </TouchableOpacity>
+    );
+
+    const renderItem = ({ item }) => (
+        <Swipeable
+            renderRightActions={() => renderRightActions(item.id)}
+            overshootRight={false}
+        >
+            <View style={styles.appointBox}>
+                <View style={styles.listRow}>
+                    <Text style={styles.infoText}>Customer:</Text>
+                    <Text style={styles.infoText}> {item.patient}</Text>
+                </View>
+                <View style={styles.listRow}>
+                    <Text style={styles.infoText}>Service:</Text>
+                    <Text style={styles.infoText}>{item.service}</Text>
+                </View>
+                <View style={styles.listRow}>
+                    <Text style={styles.infoText}>Date:</Text>
+                    <Text style={styles.infoText}>{item.date}</Text>
+                </View>
+                <View style={styles.listRow}>
+                    <Text style={styles.infoText}>Doctor:</Text>
+                    <Text style={styles.infoText}>{item.doctor}</Text>
+                </View>
+            </View>
+        </Swipeable>
+    );
 
     if (loading) {
         return (
             <View style={styles.loadingContainer}>
-                <Text>Loading...</Text>
+                <ActivityIndicator size="large" color="#0000ff" />
             </View>
         );
     }
 
     return (
-        <View style={styles.container}>
-            {/*<View style={styles.appointmentStyling}>
-                <Text style={styles.headerText}>List of Appointments:</Text>
-                <FlatList
-                    data={dummyData}
-                    renderItem={({ item }) => (
-                        <View style = {styles.listStyling}>
-                            <Text style = {styles.infoText}>Name: {item.name}</Text>
-                            <Text style={styles.infoText}>Type: {item.type}</Text>
-                            <Text style={styles.infoText}>Date: {item.date}</Text>
-                            <Text style={styles.infoText}>Physician: {item.physician}</Text>
-                        </View>
-                    )}
-                />
-            </View>
-            <View>
-                {button_BookAppointment}
-                </View>*/}
-
-            
-            <View style={styles.appointmentStyling}>
-                {/*Upcoming Appointments*/}
-                <View>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaView style={styles.container}>
+                <View style={styles.appointmentStyling}>
                     <Text style={styles.headerText}>Upcoming Appointments:</Text>
-                </View>
-
-                <View>
-                    {/* flat list is replacing the hard coded list from before as this can work with database data and print out the entire list at once */}
                     <FlatList
-                        data={dummyData}
-                        horizontal={true}
-                        renderItem={({ item }) => (
-                            <View style={styles.appointBox}>
-                                <View style={styles.listRow}>
-                                    <Text style={styles.infoText}>Customer:</Text>
-                                    <Text style={styles.infoText}> {item.name}</Text>
-                                </View>
-                                <View style={styles.listRow}>
-                                    <Text style={styles.infoText}>Service:</Text>
-                                    <Text style={styles.infoText}>{item.type}</Text>
-                                </View>
-                                <View style={styles.listRow}>
-                                    <Text style={styles.infoText}>Date:</Text>
-                                    <Text style={styles.infoText}>{item.date}</Text>
-                                </View>
-                                <View style={styles.listRow}>
-                                    <Text style={styles.infoText}>Time:</Text>
-                                    <Text style={styles.infoText}>{item.physician}</Text>
-                                </View>
-                            </View>
-                        )}
+                        data={appointments}
+                        renderItem={renderItem}
                     />
                 </View>
-                <View>
-                    {/*Past Appointments*/}
-                    <View>
-                        <Text style={styles.headerText}>Past Appointments:</Text>
-                    </View>
-
-                    {/* flat list is replacing the hard coded list from before as this can work with database data and print out the entire list at once */}
-                    <FlatList
-                        data={dummyData}
-                        horizontal={true}
-                        renderItem={({ item }) => (
-                            <View style={styles.appointBox}>
-                                <View style={styles.listRow}>
-                                    <Text style={styles.infoText}>Customer:</Text>
-                                    <Text style={styles.infoText}> {item.name}</Text>
-                                </View>
-                                <View style={styles.listRow}>
-                                    <Text style={styles.infoText}>Service:</Text>
-                                    <Text style={styles.infoText}>{item.type}</Text>
-                                </View>
-                                <View style={styles.listRow}>
-                                    <Text style={styles.infoText}>Date:</Text>
-                                    <Text style={styles.infoText}>{item.date}</Text>
-                                </View>
-                                <View style={styles.listRow}>
-                                    <Text style={styles.infoText}>Time:</Text>
-                                    <Text style={styles.infoText}>{item.physician}</Text>
-                                </View>
-                            </View>
-                        )}
-                    />
-                </View>
-                <View>
-                    {button_BookAppointment}
-                </View>
-            </View>
-        </View>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate("BookAppointment")}
+                >
+                    <Text style={styles.buttonText}>Book Appointment</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
+        </GestureHandlerRootView>
     );
 }
 
@@ -215,24 +157,34 @@ const styles = StyleSheet.create({
     appointmentStyling: {
         paddingLeft: 20,
         paddingTop: 10,
+        flex: 1,
     },
     listRow: {
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    // white appointment block
     appointBox: {
         backgroundColor: "lightblue",
         margin: 10,
         borderRadius: 20,
         padding: 15,
-        height: 125
-
+        height: 125,
     },
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    rightAction: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'red',
+        width: 80,
+        height: '100%',
+    },
+    rightActionText: {
+        color: 'white',
+        fontWeight: 'bold',
     },
 });
 
