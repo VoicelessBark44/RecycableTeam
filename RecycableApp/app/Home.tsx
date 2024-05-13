@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, Text, View, StyleSheet, Modal, TouchableOpacity } from "react-native";
+import { Pressable, Text, View, StyleSheet, Modal, TouchableOpacity, Image } from "react-native";
 //import { TouchableOpacity, GestureHandlerRootView} from 'react-native-gesture-handler';
 import { useNavigation } from "@react-navigation/native";
 
@@ -49,7 +49,7 @@ function Home(){
 
     var FamilyRegisterButton = 
     <TouchableOpacity style = {styles.button} onPress={() => navigation.navigate("TestFamilyRegister", {userData})}>
-        <Text style={styles.buttonText}>Family Register</Text>
+        <Text style={styles.buttonText}>Patient Sign Up</Text>
     </TouchableOpacity>
         
     var SearchButton =
@@ -64,7 +64,7 @@ function Home(){
 
     var displayButtons = () => {
         var buttonsArray = []
-        buttonsArray.push(PatientSignUpButton, FamilyRegisterButton, SearchButton, SignOutButton)
+        buttonsArray.push(FamilyRegisterButton, SearchButton, SignOutButton)
         return (
             <View style={styles.buttonContainer}>
                 {buttonsArray.map((item, i) => <View key={i}>{item}</View>)}
@@ -74,7 +74,12 @@ function Home(){
 
     var displayHeader = () => {
         return(
-            <View style={styles.header}><Text style={styles.headerText}>Temp Home</Text></View>
+            <View style={styles.header}>
+                <Image
+                    style={styles.logo}
+                    source={require('./images/Project Logo.png')} // Update the path accordingly
+                />
+            </View>
         )
     }
 
@@ -103,7 +108,8 @@ const styles = StyleSheet.create({
         //backgroundColor: "#ededed"
     },
     header: {
-        padding: '5%'
+        padding: '5%',
+        alignItems: 'center',
     },
     headerText: {
         fontWeight: 'bold',
@@ -164,6 +170,11 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: 'center',
         textAlignVertical: 'center'
+    },
+    logo: {
+        width: 200,
+        height: 200,
+        resizeMode: 'contain',
     },
 });
 

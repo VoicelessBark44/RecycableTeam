@@ -5,10 +5,10 @@
     "scheme": "expo-router",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./app/images/Project_Logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./app/images/Project_Logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
