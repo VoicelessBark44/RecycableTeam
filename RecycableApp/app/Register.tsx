@@ -34,8 +34,8 @@ const Register = ({ navigation, route }) => {
                 const user = userCredential.user;
                 uid = userCredential.user.uid;
                 createDBUser();
-                navigation.navigate("Login");
-
+                //navigation.navigate("Login");
+                navigation.pop();
             })
             .catch((error) => {
                 const errorCode = error.code;

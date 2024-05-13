@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import firebase, { db } from "./Firebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc, collection, addDoc, getDocs} from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
 
-const Login = ({navigation, route}) => {
+const Login = () => {
+    const navigation = useNavigation<any>();
     const { id } = useLocalSearchParams();
 
     const auth = getAuth(firebase);
@@ -38,7 +40,8 @@ const Login = ({navigation, route}) => {
             userData.userID = user.uid;
             getUserData();
             
-            navigation.navigate("LoginHome", {userData});
+            //navigation.navigate("LoginHome", {userData});
+            navigation.navigate("TabNavigatorScreen", { userData });
         } catch (error) {
             setErrorMessage('Your Password or Email \n Do not Match. Please Try Again.');
             console.log(error.message, error.code);
