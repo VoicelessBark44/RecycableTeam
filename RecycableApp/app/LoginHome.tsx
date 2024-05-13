@@ -1,17 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 function LoginHome({ route }) {
-    const navigation = useNavigation<any>()
+    const navigation = useNavigation<any>();
     const { userData } = route.params;
 
-    console.log(userData.firstName);
-    console.log(route);
+    const [loading, setLoading] = useState(!userData);
 
-    // Check if userData exists, if not, display loading indicator
-    if (!userData) {
+    useEffect(() => {
+        // Fetch userData if it's not available
+        if (!userData) {
+            // Simulating fetching userData for demonstration
+            setTimeout(() => {
+                const mockUserData = { firstName: 'John' }; // Simulated userData
+                route.params = { ...route.params, userData: mockUserData }; // Update route.params with userData
+                setLoading(false); // Set loading to false once userData is fetched
+            }, 2000); // Simulate 2 seconds delay
+        }
+    }, [userData, route.params]);
+
+    // Refresh the page once userData is available
+    useEffect(() => {
+        if (userData) {
+            // Trigger a re-render by updating the state
+            setLoading(false);
+        }
+    }, [userData]);
+
+    // Render loading indicator while waiting for userData
+    if (loading) {
         return (
             <View style={styles.container}>
                 <Text>Loading...</Text>

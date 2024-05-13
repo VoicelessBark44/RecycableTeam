@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 function AdminProfile({ route, navigation }) {
-    //const { userData } = route.params;
+    const { userData } = route.params;
 
     return (
         <View style={styles.container}>
@@ -17,10 +17,10 @@ function AdminProfile({ route, navigation }) {
 
             {/* User Information */}
             <View style={styles.userInfoContainer}>
-                <Text style={styles.userInfo}>Alexander</Text>
-                <Text style={styles.userInfo}>J</Text>
-                <Text style={styles.userInfo}>Hamilton</Text>
-                <Text style={styles.userInfo}>1</Text>
+                <Text style={styles.userInfo}>userData.firstName</Text>
+                <Text style={styles.userInfo}>userData.middleName</Text>
+                <Text style={styles.userInfo}>userData.lastName</Text>
+                <Text style={styles.userInfo}>userData.userID</Text>
             </View>
 
             {/* Button to Password Reset Page */}
