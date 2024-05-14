@@ -77,7 +77,7 @@ function Profile({navigation, route}){
     var displayButtons = () => {
         var row = []
         var buttonsArray = []
-        buttonsArray.push(button_EMR, button_HealthHistory, button_MedicalDiagnosis, button_LabTests, button_Prescription, button_Analytics)
+        buttonsArray.push(button_EMR, button_MedicalDiagnosis, button_LabTests, button_Prescription, button_Analytics)
 
         for(let i = 0 ; i < buttonsArray.length ; i+=2){
             buttonsArray.slice(i, i+1).map((item, j) => {
