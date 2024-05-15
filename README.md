@@ -1,10 +1,5 @@
 # Recyclable Team ![](./RecycableApp/app/images/Project%20Logo.png)
 
-HairDoneWright530 is located in Olivehurst, California and is privately owned by 
-Melissa Wright. The HairDoneWright530 app is designed to connect Melissa with her clients and the clients to Melissa by providing an easy to use User Interface (UI) for use in the app. This app will help drive business to HairDoneWright530 by providing to the community a state licensed cosmetologists’s services in one application. The Administrator side of the app allows for booking appointments and changing of appointments, selection of clienttell, integrated schedule setting, customized notes and information for contacting clients, and for clients they can book and see available times Melissa has for appointments while also providing a convenient, and easy to use selection of available services. 
-
-This project is being completed by a team from Sacramento State University called the Recycling Team as part of a Senior Project over the time span of 2 semesters.
-
 # Table of Contents
 - [Authors](#authors)
 - [Project Scope](#project-scope)
